@@ -131,23 +131,6 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Divider */}
-        <div className="flex items-center gap-3 mt-6">
-          <span className="flex-1 h-[1px] bg-[#EDE8DF]" />
-          <span className="text-[11.5px] text-[#8C8880] whitespace-nowrap">
-            Need help?
-          </span>
-          <span className="flex-1 h-[1px] bg-[#EDE8DF]" />
-        </div>
-
-        {/* Footer */}
-        <p className="mt-2 text-center text-[12px] text-[#8C8880]">
-          Contact your administrator or{" "}
-          <a href="#" className="text-[#A8893A] font-medium hover:underline">
-            reset credentials
-          </a>
-        </p>
-
       </div>
     </div>
   </div>
