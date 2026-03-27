@@ -70,6 +70,7 @@ const SearchElectoral = () => {
       alert("Please enter at least one search field");
       return;
     }
+    
     setLoading(true);
     try {
       const res = await axios.post("search-voter", form);
