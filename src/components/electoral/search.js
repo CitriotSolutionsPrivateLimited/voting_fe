@@ -32,17 +32,17 @@ const { Title, Text } = Typography;
 const { Option } = Select;
 
 /* ── Shared field wrapper ── */
-  const FieldWrapper = ({ label, children }) => (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-semibold text-slate-500 tracking-wide uppercase">
-        {label}{" "}
-        <span className="text-slate-300 font-normal normal-case tracking-normal">
-          (optional)
-        </span>
-      </label>
-      {children}
-    </div>
-  );
+const FieldWrapper = ({ label, children }) => (
+  <div className="flex flex-col gap-1.5">
+    <label className="text-xs font-semibold text-slate-500 tracking-wide uppercase">
+      {label}{" "}
+      <span className="text-slate-300 font-normal normal-case tracking-normal">
+        (optional)
+      </span>
+    </label>
+    {children}
+  </div>
+);
 
 const SearchElectoral = () => {
   const [form, setForm] = useState({
@@ -93,7 +93,8 @@ const SearchElectoral = () => {
     {
       title: "#",
       key: "index",
-      width: 56,
+      width: 50,
+      fixed: "left",
       render: (_, __, i) => (
         <div className="w-7 h-7 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold border border-blue-100">
           {i + 1}
@@ -104,6 +105,7 @@ const SearchElectoral = () => {
       title: "EPIC No.",
       dataIndex: "epicNumber",
       key: "epicNumber",
+      width: 130,
       render: (v) => (
         <Tag color="success" className="!font-mono !text-xs !tracking-wide !font-semibold !rounded-md">
           {v}
@@ -114,6 +116,7 @@ const SearchElectoral = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      width: 150,
       render: (v) => <span className="font-semibold text-slate-800 text-sm">{v}</span>,
     },
     {
@@ -131,24 +134,28 @@ const SearchElectoral = () => {
       title: "Relative",
       dataIndex: "relativeName",
       key: "relativeName",
+      width: 150,
       render: (v) => <span className="text-slate-500 text-sm">{v}</span>,
     },
     {
       title: "State",
       dataIndex: "state",
       key: "state",
+      width: 120,
       render: (v) => <span className="text-slate-500 text-sm">{v}</span>,
     },
     {
       title: "District",
       dataIndex: "district",
       key: "district",
+      width: 120,
       render: (v) => <span className="text-slate-500 text-sm">{v}</span>,
     },
     {
       title: "Constituency",
       dataIndex: "constituency",
       key: "constituency",
+      width: 140,
       render: (v) => <span className="font-medium text-slate-700 text-sm">{v}</span>,
     },
     {
@@ -163,6 +170,7 @@ const SearchElectoral = () => {
       title: "Polling Station",
       dataIndex: "pollingStation",
       key: "pollingStation",
+      width: 180,
       render: (v) => <span className="text-slate-500 text-sm">{v}</span>,
     },
     {
@@ -177,14 +185,19 @@ const SearchElectoral = () => {
 
   return (
     <div
-      className="min-h-screen"
       style={{
+        minHeight: "100vh",
+        width: "100%",
+        overflowX: "hidden",
         background: "linear-gradient(135deg, #f0f5ff 0%, #e8f4fd 50%, #f0fdf4 100%)",
         fontFamily: "'DM Sans', sans-serif",
+        boxSizing: "border-box",
       }}
     >
       {/* ─── Inject Google Font ─── */}
       <style>{`
+        *, *::before, *::after { box-sizing: border-box; }
+
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap');
 
         /* Ant Select customisation */
@@ -263,19 +276,56 @@ const SearchElectoral = () => {
         }
         .se-table .ant-table-container { border-radius: 0 !important; }
 
+        /* Constrain table scroll to card body only */
+        .se-table {
+          width: 100% !important;
+          overflow: hidden !important;
+        }
+        .se-table .ant-table-wrapper {
+          width: 100% !important;
+          overflow: hidden !important;
+        }
+        .se-table .ant-table-body {
+          overflow-x: auto !important;
+        }
+        .se-table .ant-table-content {
+          overflow-x: auto !important;
+        }
+
         /* Card */
-        .se-card.ant-card { border-radius: 18px !important; }
+        .se-card.ant-card {
+          border-radius: 18px !important;
+          width: 100% !important;
+          overflow: hidden !important;
+        }
         .se-card .ant-card-head {
           border-bottom: 1px solid #f1f5f9 !important;
           padding: 0 1.5rem !important;
           min-height: 52px !important;
         }
-        .se-card .ant-card-body { padding: 1.75rem !important; }
+        .se-card .ant-card-body {
+          padding: 1.75rem !important;
+          overflow: hidden !important;
+        }
+
+        /* Pagination responsiveness */
+        .ant-pagination {
+          flex-wrap: wrap !important;
+          gap: 4px !important;
+        }
       `}</style>
 
       <Header />
 
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-7">
+      <div
+        style={{
+          maxWidth: "1280px",
+          width: "100%",
+          margin: "0 auto",
+          padding: "28px 16px",
+          boxSizing: "border-box",
+        }}
+      >
 
         {/* ── Breadcrumb ── */}
         <Breadcrumb
@@ -333,12 +383,13 @@ const SearchElectoral = () => {
                 placeholder="Select State"
                 value={form.state || undefined}
                 onChange={(v) =>
-setForm((prev) => ({
-  ...prev,
-  state: v || "",
-  district: "",
-  constituency: "",
-}))                }
+                  setForm((prev) => ({
+                    ...prev,
+                    state: v || "",
+                    district: "",
+                    constituency: "",
+                  }))
+                }
                 allowClear
                 showSearch
                 optionFilterProp="children"
@@ -403,12 +454,9 @@ setForm((prev) => ({
                 prefix={<UserOutlined className="text-slate-300 text-sm" />}
                 placeholder="e.g. Ramesh Kumar"
                 value={form.name}
-onChange={(e) =>
-  setForm((prev) => ({
-    ...prev,
-    name: e.target.value,
-  }))
-}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, name: e.target.value }))
+                }
                 allowClear
               />
             </FieldWrapper>
@@ -419,12 +467,9 @@ onChange={(e) =>
                 prefix={<TeamOutlined className="text-slate-300 text-sm" />}
                 placeholder="Father / Husband / Mother"
                 value={form.relativeName}
-onChange={(e) =>
-  setForm((prev) => ({
-    ...prev,
-    relativeName: e.target.value,
-  }))
-}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, relativeName: e.target.value }))
+                }
                 allowClear
               />
             </FieldWrapper>
@@ -434,13 +479,13 @@ onChange={(e) =>
                 className="se-picker"
                 placeholder="Select date of birth"
                 value={form.dob ? dayjs(form.dob) : null}
-onChange={(date) =>
-  setForm((prev) => ({
-    ...prev,
-    dob: date ? dayjs(date).format("DD-MM-YYYY") : "",
-  }))
-}
-format="DD-MM-YYYY"
+                onChange={(date) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    dob: date ? dayjs(date).format("DD-MM-YYYY") : "",
+                  }))
+                }
+                format="DD-MM-YYYY"
               />
             </FieldWrapper>
           </div>
@@ -518,20 +563,24 @@ format="DD-MM-YYYY"
                 </Tag>
               </div>
             }
+            bodyStyle={{ padding: "1.25rem", overflow: "hidden" }}
           >
-            <Table
-              className="se-table"
-              dataSource={data.map((item, i) => ({ ...item, key: i }))}
-              columns={columns}
-              pagination={{
-                pageSize: 10,
-                showSizeChanger: true,
-                showTotal: (total, range) =>
-                  `Showing ${range[0]}–${range[1]} of ${total} records`,
-              }}
-              scroll={{ x: "max-content" }}
-              size="middle"
-            />
+            <div style={{ width: "100%", overflowX: "auto" }}>
+              <Table
+                className="se-table"
+                dataSource={data.map((item, i) => ({ ...item, key: i }))}
+                columns={columns}
+                pagination={{
+                  pageSize: 10,
+                  showSizeChanger: true,
+                  showTotal: (total, range) =>
+                    `Showing ${range[0]}–${range[1]} of ${total} records`,
+                  style: { marginTop: "12px" },
+                }}
+                scroll={{ x: "max-content" }}
+                size="middle"
+              />
+            </div>
           </Card>
         )}
       </div>

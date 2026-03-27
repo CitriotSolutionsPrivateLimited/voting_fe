@@ -77,15 +77,13 @@ const Login = () => {
         }
 
         .login-wrapper {
-          display: flex;
-          width: 100%;
-          max-width: 920px;
-          min-height: 560px;
-          border-radius: 28px;
-          overflow: hidden;
-          box-shadow: 0 8px 60px rgba(44,42,39,0.10), 0 2px 16px rgba(44,42,39,0.06);
-          animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) both;
-        }
+  width: 100%;
+  max-width: 420px;   /* match your form width */
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 8px 60px rgba(44,42,39,0.10), 0 2px 16px rgba(44,42,39,0.06);
+  animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) both;
+}
 
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(28px); }
@@ -203,13 +201,13 @@ const Login = () => {
 
         /* ── Right Panel ── */
         .login-panel-right {
-          flex: 0 0 420px;
-          background: var(--warm-white);
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          padding: 52px 48px;
-        }
+  width: 100%;
+  background: var(--warm-white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 52px 48px;
+}
 
         .right-eyebrow {
           font-size: 11px;
@@ -435,29 +433,9 @@ const Login = () => {
       <div className="login-root">
         <div className="login-wrapper">
 
-          {/* ── Left decorative panel ── */}
-          <div className="login-panel-left">
-            <div className="left-brand">
-              <div className="left-badge">
-                <span className="left-badge-dot" />
-                <span>Secure Platform</span>
-              </div>
-              <h2 className="left-title">
-                Your <em>voice</em><br />matters here.
-              </h2>
-              <p className="left-desc">
-                A transparent, tamper-proof voting system built for communities that trust each other.
-              </p>
-            </div>
-
-            
-          </div>
-
-          {/* ── Right form panel ── */}
           <div className="login-panel-right">
             <p className="right-eyebrow">Voting Portal</p>
             <h1 className="right-heading">Welcome back</h1>
-            <p className="right-sub">Sign in to cast your vote.</p>
 
             <form onSubmit={handleLogin} autoComplete="off">
 
