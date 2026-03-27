@@ -27,7 +27,6 @@ const Home = () => {
       title: "My Records",
       description:
         "View and manage your saved voter records and recent searches.",
-      // route: "/records",
       accent: "#0ea5e9",
       bg: "#e0f2fe",
       border: "#bae6fd",
@@ -37,108 +36,54 @@ const Home = () => {
       title: "Constituency Map",
       description:
         "Explore districts and constituencies visually on an interactive map.",
-      // route: "/map",
       accent: "#10b981",
       bg: "#d1fae5",
       border: "#a7f3d0",
     },
   ];
 
-  const stats = [
-    { label: "Total Voters", value: "9.2M+", icon: "👥" },
-    { label: "Districts", value: "38", icon: "🏛️" },
-    { label: "Constituencies", value: "294", icon: "📍" },
-  ];
-
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(145deg, #f8faff 0%, #f0f4ff 50%, #faf5ff 100%)",
-        fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
-      }}
-    >
-      {/* Decorative background blobs */}
-      <div style={{ position: "fixed", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 0 }}>
-        <div style={{
-          position: "absolute", top: "-80px", right: "-80px",
-          width: "400px", height: "400px", borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)",
-        }} />
-        <div style={{
-          position: "absolute", bottom: "10%", left: "-60px",
-          width: "320px", height: "320px", borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%)",
-        }} />
-        <div style={{
-          position: "absolute", top: "40%", right: "15%",
-          width: "200px", height: "200px", borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(14,165,233,0.06) 0%, transparent 70%)",
-        }} />
+    <div className="min-h-screen bg-[linear-gradient(145deg,#f8faff_0%,#f0f4ff_50%,#faf5ff_100%)] font-sans relative overflow-hidden">
+
+      {/* Background blobs */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute -top-20 -right-20 w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.08)_0%,transparent_70%)]" />
+        <div className="absolute bottom-[10%] -left-16 w-[320px] h-[320px] rounded-full bg-[radial-gradient(circle,rgba(16,185,129,0.07)_0%,transparent_70%)]" />
+        <div className="absolute top-[40%] right-[15%] w-[200px] h-[200px] rounded-full bg-[radial-gradient(circle,rgba(14,165,233,0.06)_0%,transparent_70%)]" />
       </div>
 
-      {/* Header */}
       <Header />
 
-      {/* Main Content */}
-      <main style={{ position: "relative", zIndex: 1, maxWidth: "1100px", margin: "0 auto", padding: "48px 20px 80px" }}>
+      <main className="relative z-10 max-w-[1100px] mx-auto px-5 py-12 pb-20">
 
-        {/* Hero Section */}
-        <div style={{
-          textAlign: "center",
-          marginBottom: "56px",
-          opacity: mounted ? 1 : 0,
-          transform: mounted ? "translateY(0)" : "translateY(20px)",
-          transition: "all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)",
-        }}>
-          
-
-          <h1 style={{
-            fontSize: "clamp(2rem, 5vw, 3.2rem)",
-            fontWeight: "800",
-            color: "#0f172a",
-            lineHeight: "1.15",
-            letterSpacing: "-0.03em",
-            marginBottom: "16px",
-          }}>
+        {/* Hero */}
+        <div
+          className={`text-center mb-14 transition-all duration-700 ${
+            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+          }`}
+        >
+          <h1 className="text-[clamp(2rem,5vw,3.2rem)] font-extrabold text-[#0f172a] leading-tight tracking-[-0.03em] mb-4">
             Voter Information{" "}
-            <span style={{
-              background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}>
+            <span className="bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] bg-clip-text text-transparent">
               Portal
             </span>
           </h1>
-
-         
         </div>
 
-        
-
-        {/* Cards Grid */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))",
-          gap: "20px",
-        }}>
+        {/* Cards */}
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(290px,1fr))] gap-5">
           {cards.map((card, i) => (
             <ActionCard
-              key={card.route}
+              key={i}
               card={card}
               index={i}
               mounted={mounted}
-              onClick={() => navigate(card.route)}
+              onClick={() => card.route && navigate(card.route)}
             />
           ))}
         </div>
-      </main>
 
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-      `}</style>
+      </main>
     </div>
   );
 };
@@ -151,69 +96,63 @@ const ActionCard = ({ card, index, mounted, onClick }) => {
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      className={`relative overflow-hidden rounded-[20px] p-7 cursor-pointer transition-all duration-300 ${
+        hovered
+          ? "shadow-[0_12px_32px_rgba(0,0,0,0.1)] -translate-y-1 scale-[1.01]"
+          : "shadow-[0_2px_12px_rgba(0,0,0,0.05)]"
+      } ${
+        mounted ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-5 scale-95"
+      }`}
       style={{
         background: "white",
-        borderRadius: "20px",
         border: `1.5px solid ${hovered ? card.border : "#e8ecf4"}`,
-        padding: "28px",
-        cursor: "pointer",
-        boxShadow: hovered
-          ? `0 12px 32px rgba(0,0,0,0.1), 0 0 0 4px ${card.border}`
-          : "0 2px 12px rgba(0,0,0,0.05)",
-        transform: hovered ? "translateY(-4px) scale(1.01)" : mounted ? "translateY(0) scale(1)" : "translateY(20px) scale(0.97)",
-        opacity: mounted ? 1 : 0,
-        transition: `all 0.4s ${0.2 + index * 0.1}s cubic-bezier(0.34, 1.56, 0.64, 1)`,
-        position: "relative", overflow: "hidden",
+        transition: `all 0.4s ${0.2 + index * 0.1}s cubic-bezier(0.34,1.56,0.64,1)`,
       }}
     >
-      {/* Accent corner */}
-      <div style={{
-        position: "absolute", top: 0, right: 0,
-        width: "80px", height: "80px",
-        background: `radial-gradient(circle at top right, ${card.bg}, transparent 70%)`,
-        pointerEvents: "none",
-      }} />
+      {/* Accent */}
+      <div
+        className="absolute top-0 right-0 w-20 h-20 pointer-events-none"
+        style={{
+          background: `radial-gradient(circle at top right, ${card.bg}, transparent 70%)`,
+        }}
+      />
 
       {/* Icon */}
-      <div style={{
-        width: "52px", height: "52px", borderRadius: "14px",
-        background: card.bg,
-        border: `1.5px solid ${card.border}`,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: "24px", marginBottom: "18px",
-        transform: hovered ? "scale(1.1) rotate(-3deg)" : "scale(1) rotate(0deg)",
-        transition: "transform 0.3s ease",
-      }}>
+      <div
+        className="w-[52px] h-[52px] rounded-[14px] flex items-center justify-center text-2xl mb-4 transition-transform duration-300"
+        style={{
+          background: card.bg,
+          border: `1.5px solid ${card.border}`,
+          transform: hovered ? "scale(1.1) rotate(-3deg)" : "scale(1)",
+        }}
+      >
         {card.icon}
       </div>
 
-      {/* Text */}
-      <h2 style={{
-        fontSize: "17px", fontWeight: "700", color: "#0f172a",
-        marginBottom: "8px", lineHeight: "1.3",
-      }}>
+      {/* Title */}
+      <h2 className="text-[17px] font-bold text-[#0f172a] mb-2 leading-snug">
         {card.title}
       </h2>
-      <p style={{
-        fontSize: "13.5px", color: "#64748b", lineHeight: "1.65",
-        marginBottom: "20px",
-      }}>
+
+      {/* Description */}
+      <p className="text-[13.5px] text-[#64748b] leading-relaxed mb-5">
         {card.description}
       </p>
 
       {/* CTA */}
-      <div style={{
-        display: "inline-flex", alignItems: "center", gap: "6px",
-        fontSize: "13px", fontWeight: "700",
-        color: card.accent,
-        transition: "gap 0.2s ease",
-      }}>
+      <div
+        className="inline-flex items-center gap-1.5 text-[13px] font-bold transition-all"
+        style={{ color: card.accent }}
+      >
         Get started
-        <span style={{
-          display: "inline-block",
-          transform: hovered ? "translateX(4px)" : "translateX(0)",
-          transition: "transform 0.2s ease",
-        }}>→</span>
+        <span
+          className="inline-block transition-transform duration-200"
+          style={{
+            transform: hovered ? "translateX(4px)" : "translateX(0)",
+          }}
+        >
+          →
+        </span>
       </div>
     </div>
   );
