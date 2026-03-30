@@ -5,6 +5,7 @@ import Login from "./login/login";
 import Home from "./components/homepage/home";
 import ProtectedRoute from "./components/protectedRoute";
 import SearchElectoral from "./components/electoral/search";
+import ElectoralRecords from "./components/electoral/records";
 
 function App() {
   return (
@@ -29,6 +30,16 @@ function App() {
           element={
             <ProtectedRoute>
               <SearchElectoral />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected Electoral Records */}
+        <Route
+          path="/records"
+          element={
+            <ProtectedRoute>
+              <ElectoralRecords />
             </ProtectedRoute>
           }
         />

@@ -22,11 +22,14 @@ import {
   TeamOutlined,
   IdcardOutlined,
   FileSearchOutlined,
+  DownloadOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import Header from "../header/header";
 import axios from "../../utils/axios";
 import { INDIA_DATA } from "../data/indiadata";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -89,6 +92,45 @@ const SearchElectoral = () => {
     setSearched(false);
   };
 
+  const handleExport = () => {
+    if (!data.length) return;
+
+    // Format data for Excel
+    const formattedData = data.map((item, index) => ({
+      "S.No": index + 1,
+      "EPIC No": item.epicNumber,
+      Name: item.name,
+      Age: item.age,
+      "Relative Name": item.relativeName,
+      Relation: item.relation,
+      State: item.state,
+      District: item.district,
+      Constituency: item.constituency,
+      Part: item.part,
+      "Polling Station": item.pollingStation,
+      "Serial No": item.serialNumber,
+    }));
+
+    // Create worksheet
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+
+    // Create workbook
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Voters");
+
+    // Generate Excel file
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    const file = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    saveAs(file, "voter_data.xlsx");
+  };
+
   /* ── Table Columns ── */
   const columns = [
     {
@@ -132,10 +174,18 @@ const SearchElectoral = () => {
       ),
     },
     {
-      title: "Relative",
+      title: "Relative Name",
       dataIndex: "relativeName",
       key: "relativeName",
       width: 150,
+      render: (v) => <span className="text-slate-500 text-sm">{v}</span>,
+    },
+      {
+      title: "Relation",
+      dataIndex: "relation",
+      key: "relation",
+      width: 68,
+      align: "center",
       render: (v) => <span className="text-slate-500 text-sm">{v}</span>,
     },
     {
@@ -416,17 +466,31 @@ const SearchElectoral = () => {
           className="se-card shadow-lg border border-slate-200"
           title={
             <div className="flex items-center justify-between w-full py-0.5">
-              <div className="flex items-center gap-2">
-                <IdcardOutlined className="text-blue-500 text-base" />
-                <span className="font-bold text-slate-800 text-base">
-                  Search Results
-                </span>
-              </div>
+            <div className="flex items-center gap-2">
+              <IdcardOutlined className="text-blue-500 text-base" />
+              <span className="font-bold text-slate-800 text-base">
+                Search Results
+              </span>
+            </div>
 
-              <Tag className="!rounded-full !px-3 !font-semibold !text-xs" color="blue">
+            <div className="flex items-center gap-3">
+              <Tag
+                className="!rounded-full !px-3 !font-semibold !text-xs"
+                color="blue"
+              >
                 {data.length} voter{data.length !== 1 ? "s" : ""} found
               </Tag>
+
+              <Button
+                icon={<DownloadOutlined />}
+                onClick={handleExport}
+                disabled={!data.length}
+                className="!rounded-lg !font-medium"
+              >
+                Export Excel
+              </Button>
             </div>
+          </div>
           }
         >
           <div className="w-full overflow-x-auto">
@@ -436,7 +500,8 @@ const SearchElectoral = () => {
               columns={columns}
               pagination={{
                 pageSize: 10,
-                showSizeChanger: true,
+                showSizeChanger: false,
+                showQuickJumper: false,
                 showTotal: (total, range) =>
                   `Showing ${range[0]}–${range[1]} of ${total} records`,
               }}

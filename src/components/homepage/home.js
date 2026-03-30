@@ -24,21 +24,13 @@ const Home = () => {
     },
     {
       icon: "📋",
-      title: "My Records",
+      title: "Get Records",
       description:
-        "View and manage your saved voter records and recent searches.",
+        "View the records on EPIC number / School (polling statsion).",
+      route: "/records",  
       accent: "#0ea5e9",
       bg: "#e0f2fe",
       border: "#bae6fd",
-    },
-    {
-      icon: "🗺️",
-      title: "Constituency Map",
-      description:
-        "Explore districts and constituencies visually on an interactive map.",
-      accent: "#10b981",
-      bg: "#d1fae5",
-      border: "#a7f3d0",
     },
   ];
 
@@ -62,7 +54,7 @@ const Home = () => {
             mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
-          <h1 className="text-[clamp(2rem,5vw,3.2rem)] font-extrabold text-[#0f172a] leading-tight tracking-[-0.03em] mb-4">
+          <h1 className="text-[clamp(2rem,5vw,3.2rem)] font-bold text-[#0f172a] leading-tight tracking-[-0.03em] mb-4">
             Voter Information{" "}
             <span className="bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] bg-clip-text text-transparent">
               Portal
