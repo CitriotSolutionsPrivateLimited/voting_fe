@@ -31,7 +31,7 @@ import { INDIA_DATA } from "../data/indiadata";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const { Option } = Select;
 
 /* ── Shared field wrapper ── */
@@ -97,8 +97,7 @@ const SearchElectoral = () => {
 
     // Format data for Excel
     const formattedData = data.map((item, index) => ({
-      "S.No": index + 1,
-      "EPIC No": item.epicNumber,
+      "Serial No": item.serialNumber,
       Name: item.name,
       Age: item.age,
       "Relative Name": item.relativeName,
@@ -108,7 +107,6 @@ const SearchElectoral = () => {
       Constituency: item.constituency,
       Part: item.part,
       "Polling Station": item.pollingStation,
-      "Serial No": item.serialNumber,
     }));
 
     // Create worksheet
@@ -134,27 +132,28 @@ const SearchElectoral = () => {
   /* ── Table Columns ── */
   const columns = [
     {
-      title: "#",
-      key: "index",
-      width: 50,
-      fixed: "left",
-      render: (_, __, i) => (
-        <div className="w-7 h-7 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold border border-blue-100">
-          {i + 1}
-        </div>
-      ),
+      title: "Serial No.",
+      dataIndex: "serialNumber",
+      key: "serialNumber",
+      width: 90,
+      align: "center",
+      render: (v, _, i) => (
+      <span className="font-semibold text-slate-700 text-sm">
+        {v || i + 1}
+      </span>
+    )
     },
-    {
-      title: "EPIC No.",
-      dataIndex: "epicNumber",
-      key: "epicNumber",
-      width: 130,
-      render: (v) => (
-        <Tag color="success" className="!font-mono !text-xs !tracking-wide !font-semibold !rounded-md">
-          {v}
-        </Tag>
-      ),
-    },
+    // {
+    //   title: "EPIC No.",
+    //   dataIndex: "epicNumber",
+    //   key: "epicNumber",
+    //   width: 130,
+    //   render: (v) => (
+    //     <Tag color="success" className="!font-mono !text-xs !tracking-wide !font-semibold !rounded-md">
+    //       {v}
+    //     </Tag>
+    //   ),
+    // },
     {
       title: "Name",
       dataIndex: "name",
@@ -222,14 +221,6 @@ const SearchElectoral = () => {
       dataIndex: "pollingStation",
       key: "pollingStation",
       width: 180,
-      render: (v) => <span className="text-slate-500 text-sm">{v}</span>,
-    },
-    {
-      title: "Serial No.",
-      dataIndex: "serialNumber",
-      key: "serialNumber",
-      width: 90,
-      align: "center",
       render: (v) => <span className="text-slate-500 text-sm">{v}</span>,
     },
   ];
@@ -379,7 +370,7 @@ const SearchElectoral = () => {
             <Input
               className="se-input"
               prefix={<TeamOutlined className="text-slate-300 text-sm" />}
-              placeholder="Father / Husband / Mother"
+              placeholder="Father / Husband"
               value={form.relativeName}
               onChange={(e) =>
                 setForm((prev) => ({

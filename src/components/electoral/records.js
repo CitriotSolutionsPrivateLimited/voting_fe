@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Input,
@@ -10,14 +10,12 @@ import {
   Card,
   Empty,
   Divider,
-  Alert,
+  Alert, Select ,
 } from "antd";
 import {
   SearchOutlined,
   HomeOutlined,
   ClearOutlined,
-  IdcardOutlined,
-  BankOutlined,
   FileSearchOutlined,
 } from "@ant-design/icons";
 import Header from "../header/header";
@@ -27,6 +25,7 @@ import { saveAs } from "file-saver";
 import { DownloadOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
+const { Option } = Select;
 
 /* Field Wrapper */
 const FieldWrapper = ({ label, children }) => (
@@ -40,17 +39,30 @@ const FieldWrapper = ({ label, children }) => (
 
 const ElectoralRecords = () => {
   const [form, setForm] = useState({
-    epicNumber: "",
     pollingStation: "",
   });
 
   const [data, setData] = useState([]);
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [stations, setStations] = useState([]);
+
+
+  useEffect(() => {
+    const fetchStations = async () => {
+      try {
+        const res = await axios.get("polling-stations");
+        setStations(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchStations();
+  }, []);
 
   /* Disable search until typing */
-  const isSearchDisabled =
-    !form.epicNumber.trim() && !form.pollingStation.trim();
+  const isSearchDisabled = !form.pollingStation.trim();
 
   const handleSearch = async () => {
     setLoading(true);
@@ -68,7 +80,6 @@ const ElectoralRecords = () => {
 
   const handleReset = () => {
     setForm({
-      epicNumber: "",
       pollingStation: "",
     });
 
@@ -80,8 +91,7 @@ const ElectoralRecords = () => {
     if (!data.length) return;
 
     const formattedData = data.map((item, index) => ({
-        "S.No": index + 1,
-        "EPIC No": item.epicNumber,
+       "Serial No": item.serialNumber,
         Name: item.name,
         Age: item.age,
         "Relative Name": item.relativeName,
@@ -91,7 +101,6 @@ const ElectoralRecords = () => {
         Constituency: item.constituency,
         Part: item.part,
         "Polling Station": item.pollingStation,
-        "Serial No": item.serialNumber,
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(formattedData);
@@ -111,17 +120,10 @@ const ElectoralRecords = () => {
     };
 
   const columns = [
-    {
-      title: "#",
-      key: "index",
-      width: 60,
-      render: (_, __, i) => i + 1,
-    },
-    {
-      title: "EPIC No.",
-      dataIndex: "epicNumber",
-      key: "epicNumber",
-      render: (v) => <Tag color="green">{v}</Tag>,
+     {
+      title: "Serial No.",
+      dataIndex: "serialNumber",
+      key: "serialNumber",
     },
     {
       title: "Name",
@@ -168,11 +170,6 @@ const ElectoralRecords = () => {
       title: "Polling Station",
       dataIndex: "pollingStation",
       key: "pollingStation",
-    },
-    {
-      title: "Serial No.",
-      dataIndex: "serialNumber",
-      key: "serialNumber",
     },
   ];
 
@@ -227,34 +224,27 @@ const ElectoralRecords = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FieldWrapper label="EPIC Number">
-              <Input
-                prefix={<IdcardOutlined />}
-                placeholder="Enter EPIC Number"
-                value={form.epicNumber}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    epicNumber: e.target.value,
-                  })
-                }
-                allowClear
-              />
-            </FieldWrapper>
-
             <FieldWrapper label="Polling Station / School">
-              <Input
-                prefix={<BankOutlined />}
-                placeholder="Enter School / Polling Station"
-                value={form.pollingStation}
-                onChange={(e) =>
+              <Select
+                showSearch
+                placeholder="Select Polling Station"
+                value={form.pollingStation || undefined}
+                onChange={(value) =>
                   setForm({
                     ...form,
-                    pollingStation: e.target.value,
+                    pollingStation: value || "",
                   })
                 }
                 allowClear
-              />
+                optionFilterProp="children"
+                className="w-full"
+              >
+                {stations.map((station) => (
+                  <Option key={station} value={station}>
+                    {station}
+                  </Option>
+                ))}
+              </Select>
             </FieldWrapper>
           </div>
 
@@ -264,7 +254,7 @@ const ElectoralRecords = () => {
             <div className="w-full sm:w-auto">
               {isSearchDisabled ? (
                 <Alert
-                  message="Start typing EPIC number or Polling Station to enable search"
+                  message="Start typing Polling Station to enable search"
                   type="info"
                   showIcon
                   className="!py-1"
