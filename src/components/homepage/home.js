@@ -26,7 +26,7 @@ const Home = () => {
       icon: "📋",
       title: "Get Records",
       description:
-        "View the records on EPIC number / School (polling statsion).",
+        "View the records on EPIC number / School (polling station).",
       route: "/records",  
       accent: "#0ea5e9",
       bg: "#e0f2fe",
