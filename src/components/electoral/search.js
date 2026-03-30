@@ -1,18 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  Select,
-  Input,
-  DatePicker,
-  Button,
-  Table,
-  Tag,
-  Breadcrumb,
-  Typography,
-  Card,
-  Empty,
-  Divider,
-} from "antd";
+import { Select, Input, DatePicker, Button, Table, Tag, Breadcrumb, Typography, Card, Empty,Divider, message,} from "antd";
 import {
   SearchOutlined,
   HomeOutlined,
@@ -69,17 +57,19 @@ const SearchElectoral = () => {
 
   const handleSearch = async () => {
     const anyFilled = Object.values(form).some((v) => v);
+
     if (!anyFilled) {
-      alert("Please enter at least one search field");
+      message.warning("Please enter at least one search field");
       return;
     }
-    
+
     setLoading(true);
     try {
       const res = await axios.post("search-voter", form);
       setData(res.data);
     } catch (err) {
       console.error(err);
+      message.error("Something went wrong while searching");
     } finally {
       setSearched(true);
       setLoading(false);
@@ -143,17 +133,6 @@ const SearchElectoral = () => {
       </span>
     )
     },
-    // {
-    //   title: "EPIC No.",
-    //   dataIndex: "epicNumber",
-    //   key: "epicNumber",
-    //   width: 130,
-    //   render: (v) => (
-    //     <Tag color="success" className="!font-mono !text-xs !tracking-wide !font-semibold !rounded-md">
-    //       {v}
-    //     </Tag>
-    //   ),
-    // },
     {
       title: "Name",
       dataIndex: "name",
