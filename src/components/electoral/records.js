@@ -85,6 +85,7 @@ const ElectoralRecords = () => {
         Name: item.name,
         Age: item.age,
         "Relative Name": item.relativeName,
+        Relation: item.relation,
         State: item.state,
         District: item.district,
         Constituency: item.constituency,
@@ -134,9 +135,14 @@ const ElectoralRecords = () => {
       render: (v) => <Tag color="orange">{v} yrs</Tag>,
     },
     {
-      title: "Relative",
+      title: "Relative Name",
       dataIndex: "relativeName",
       key: "relativeName",
+    },
+    {
+      title: "Relation",
+      dataIndex: "relation",
+      key: "relation",
     },
     {
       title: "State",
