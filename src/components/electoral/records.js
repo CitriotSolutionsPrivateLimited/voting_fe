@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-  Input,
   Button,
   Table,
   Tag,
   Breadcrumb,
-  Typography,
   Card,
   Empty,
   Divider,
@@ -24,7 +22,6 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { DownloadOutlined } from "@ant-design/icons";
 
-const { Text } = Typography;
 const { Option } = Select;
 
 /* Field Wrapper */
@@ -210,7 +207,7 @@ const ElectoralRecords = () => {
           </h1>
 
           <p className="text-slate-500">
-            Search voter records using EPIC number or School
+            Search voter records using School (polling station) details.
           </p>
         </div>
 

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Header from "../header/header";
 
 const Home = () => {
-  const user = localStorage.getItem("user") || "Guest";
   const navigate = useNavigate();
   const [mounted, setMounted] = useState(false);
 
