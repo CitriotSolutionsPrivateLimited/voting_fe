@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Select, Input, DatePicker, Button, Table, Tag, Breadcrumb, Typography, Card, Empty,Divider, message,} from "antd";
 import {
@@ -43,7 +43,9 @@ const SearchElectoral = () => {
     name: "",
     relativeName: "",
     dob: "",
+    pollingStation: "",
   });
+  const [stations, setStations] = useState([]);
   const [data, setData] = useState([]);
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -54,6 +56,19 @@ const SearchElectoral = () => {
     form.state && form.district
       ? INDIA_DATA[form.state]?.[form.district] || []
       : [];
+
+  useEffect(() => {
+    const fetchStations = async () => {
+      try {
+        const res = await axios.get("polling-stations");
+        setStations(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchStations();
+  }, []);
 
   const handleSearch = async () => {
     const anyFilled = Object.values(form).some((v) => v);
@@ -77,7 +92,7 @@ const SearchElectoral = () => {
   };
 
   const handleReset = () => {
-    setForm({ state: "", district: "", constituency: "", name: "", relativeName: "", dob: "" });
+    setForm({ state: "", district: "", constituency: "", name: "", relativeName: "", dob: "", pollingStation: "" });
     setData([]);
     setSearched(false);
   };
@@ -336,7 +351,7 @@ const SearchElectoral = () => {
             <Input
               className="se-input"
               prefix={<UserOutlined className="text-slate-300 text-sm" />}
-              placeholder="e.g. Ramesh Kumar"
+              placeholder="e.g. John Doe"
               value={form.name}
               onChange={(e) =>
                 setForm((prev) => ({ ...prev, name: e.target.value }))
@@ -374,6 +389,29 @@ const SearchElectoral = () => {
               }
               format="DD-MM-YYYY"
             />
+          </FieldWrapper>
+
+          <FieldWrapper label="Polling Station / School">
+            <Select
+              className="se-select w-full"
+              placeholder="Select Polling Station"
+              value={form.pollingStation || undefined}
+              onChange={(value) =>
+                setForm((prev) => ({
+                  ...prev,
+                  pollingStation: value || "",
+                }))
+              }
+              allowClear
+              showSearch
+              optionFilterProp="children"
+            >
+              {stations.map((station) => (
+                <Option key={station} value={station}>
+                  {station}
+                </Option>
+              ))}
+            </Select>
           </FieldWrapper>
         </div>
 
