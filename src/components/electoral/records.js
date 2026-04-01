@@ -89,6 +89,7 @@ const ElectoralRecords = () => {
 
     const formattedData = data.map((item, index) => ({
        "Serial No": item.serialNumber,
+        "EPIC No": item.epicNumber,
         Name: item.name,
         Age: item.age,
         "Relative Name": item.relativeName,
@@ -122,6 +123,13 @@ const ElectoralRecords = () => {
       title: "Serial No.",
       dataIndex: "serialNumber",
       key: "serialNumber",
+    },
+    {
+      title: "EPIC No.",
+      dataIndex: "epicNumber",
+      key: "epicNumber",
+      width: 120,
+      render: (v) => <span className="text-slate-500 text-sm">{v}</span>,
     },
     {
       title: "Name",
