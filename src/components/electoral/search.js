@@ -107,6 +107,7 @@ const SearchElectoral = () => {
       Age: item.age,
       "Relative Name": item.relativeName,
       Relation: item.relation,
+      Gender: item.gender,
       State: item.state,
       District: item.district,
       Constituency: item.constituency,
@@ -181,6 +182,14 @@ const SearchElectoral = () => {
       align: "center",
       render: (v) => <span className="text-slate-500 text-sm">{v}</span>,
     },
+      {
+        title: "Gender",
+        dataIndex: "gender",
+        key: "gender",
+        width: 68,
+        align: "center",
+        render: (v) => <span className="text-slate-500 text-sm">{v}</span>,
+      },
     {
       title: "State",
       dataIndex: "state",

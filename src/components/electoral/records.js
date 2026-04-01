@@ -93,6 +93,7 @@ const ElectoralRecords = () => {
         Age: item.age,
         "Relative Name": item.relativeName,
         Relation: item.relation,
+        Gender: item.gender,
         State: item.state,
         District: item.district,
         Constituency: item.constituency,
@@ -143,6 +144,11 @@ const ElectoralRecords = () => {
       dataIndex: "relation",
       key: "relation",
     },
+      {
+        title: "Gender",
+        dataIndex: "gender",
+        key: "gender",
+      },
     {
       title: "State",
       dataIndex: "state",
