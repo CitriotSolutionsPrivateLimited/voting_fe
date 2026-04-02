@@ -49,6 +49,10 @@ const SearchElectoral = () => {
   const [data, setData] = useState([]);
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const limit = 20;
 
   const states = Object.keys(INDIA_DATA);
   const districts = form.state ? Object.keys(INDIA_DATA[form.state] || {}) : [];
@@ -70,7 +74,7 @@ const SearchElectoral = () => {
     fetchStations();
   }, []);
 
-  const handleSearch = async () => {
+  const handleSearch = async (customPage = page) => {
     const anyFilled = Object.values(form).some((v) => v);
 
     if (!anyFilled) {
@@ -80,8 +84,16 @@ const SearchElectoral = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post("search-voter", form);
-      setData(res.data);
+      const res = await axios.post("search-voter", {
+        ...form,
+        page: customPage,
+        limit
+      });
+
+      setData(res.data.data);
+      setTotal(res.data.total);
+      setPage(customPage);
+
     } catch (err) {
       console.error(err);
       message.error("Something went wrong while searching");
@@ -92,48 +104,72 @@ const SearchElectoral = () => {
   };
 
   const handleReset = () => {
-    setForm({ state: "", district: "", constituency: "", name: "", relativeName: "", dob: "", pollingStation: "" });
-    setData([]);
-    setSearched(false);
-  };
+      setForm({
+        state: "",
+        district: "",
+        constituency: "",
+        name: "",
+        relativeName: "",
+        dob: "",
+        pollingStation: ""
+      });
+      setData([]);
+      setSearched(false);
+      setPage(1);
+      setTotal(0);
+    };
 
-  const handleExport = () => {
-    if (!data.length) return;
+  const handleExport = async () => {
+    setExportLoading(true);
 
-    // Format data for Excel
-    const formattedData = data.map((item, index) => ({
-      "Serial No": item.serialNumber,
-      "EPIC No": item.epicNumber,
-      Name: item.name,
-      Age: item.age,
-      "Relative Name": item.relativeName,
-      Relation: item.relation,
-      Gender: item.gender,
-      State: item.state,
-      District: item.district,
-      Constituency: item.constituency,
-      Part: item.part,
-      "Polling Station": item.pollingStation,
-    }));
+    try {
+      const res = await axios.post("export-voters", {
+        ...form,
+      });
 
-    // Create worksheet
-    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+      const fullData = res.data.data;
 
-    // Create workbook
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Voters");
+      if (!fullData.length) {
+        message.warning("No data to export");
+        return;
+      }
 
-    // Generate Excel file
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
-    });
+      const formattedData = fullData.map((item) => ({
+        "Serial No": item.serialNumber,
+        "EPIC No": item.epicNumber,
+        Name: item.name,
+        Age: item.age,
+        "Relative Name": item.relativeName,
+        Relation: item.relation,
+        Gender: item.gender,
+        State: item.state,
+        District: item.district,
+        Constituency: item.constituency,
+        Part: item.part,
+        "Polling Station": item.pollingStation,
+      }));
 
-    const file = new Blob([excelBuffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
+      const worksheet = XLSX.utils.json_to_sheet(formattedData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Voters");
 
-    saveAs(file, "voter_data.xlsx");
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+
+      const file = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      saveAs(file, "voter_data.xlsx");
+
+    } catch (err) {
+      console.error(err);
+      message.error("Export failed");
+    } finally {
+      setExportLoading(false);
+    }
   };
 
   /* ── Table Columns ── */
@@ -451,7 +487,7 @@ const SearchElectoral = () => {
               type="primary"
               icon={<SearchOutlined />}
               loading={loading}
-              onClick={handleSearch}
+              onClick={() => handleSearch(1)}
               className="!rounded-xl !h-10 !px-7 !font-semibold !border-none"
               style={{
                 background:
@@ -503,12 +539,13 @@ const SearchElectoral = () => {
                 className="!rounded-full !px-3 !font-semibold !text-xs"
                 color="blue"
               >
-                {data.length} voter{data.length !== 1 ? "s" : ""} found
+                {total} voters found
               </Tag>
 
               <Button
                 icon={<DownloadOutlined />}
                 onClick={handleExport}
+                loading={exportLoading}
                 disabled={!data.length}
                 className="!rounded-lg !font-medium"
               >
@@ -524,9 +561,14 @@ const SearchElectoral = () => {
               dataSource={data.map((item, i) => ({ ...item, key: i }))}
               columns={columns}
               pagination={{
-                pageSize: 10,
+                current: page,
+                pageSize: limit,
+                total: total,
                 showSizeChanger: false,
                 showQuickJumper: false,
+                onChange: (newPage) => {
+                    handleSearch(newPage);
+                  },
                 showTotal: (total, range) =>
                   `Showing ${range[0]}–${range[1]} of ${total} records`,
               }}

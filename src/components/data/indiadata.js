@@ -1,81 +1,169 @@
 export const INDIA_DATA = {
   "Karnataka": {
-    "Bangalore Urban": [
-        "Yelahanka", "Byatarayanapura", "Yeshwanthpura", "Dasarahalli",
-        "Mahalakshmi Layout", "Malleshwaram", "Hebbal", "Pulakeshinagar",
-        "Sarvagnanagar", "C.V. Raman Nagar", "Shivajinagar", "Shanti Nagar",
-        "Gandhinagar", "Rajajinagar", "Govindrajnagar", "Vijayanagar",
-        "Chamrajpet", "Chickpet", "Basavanagudi", "Padmanaba Nagar",
-        "B.T.M. Layout", "Jayanagar", "Bommanahalli", "Bellandur",
-        "K.R. Puram", "Mahadevapura", "Rajarajeshwari Nagar", "Vijayapura"
+    "Bagalkot": [
+      "Jamkhandi", "Bilgi", "Mudhol", "Bagalkot",
+      "Badami", "Gulegud", "Hungund"
     ],
-    "Bangalore Rural": [
-        "Devanahalli", "Doddaballapura", "Nelamangala", "Hosakote"
-    ],
-    "Mysuru": [
-        "Krishnaraja", "Chamundeshwari", "Narasimharaja", "Chamaraja",
-        "Hunsur", "Heggadadevankote", "Nanjangud", "T. Narasipur"
+    "Ballari": [
+      "Bellary City", "Bellary Rural", "Kampli",
+      "Siruguppa", "Sandur", "Kudligi"
     ],
     "Belagavi": [
-        "Belagavi Uttar", "Belagavi Dakshin", "Belagavi Rural", "Gokak",
-        "Hukkeri", "Raibag", "Nippani", "Chikodi", "Athani", "Kagwad"
+      "Nippani", "Chikodi-Sadalga", "Athani", "Kagwad",
+      "Kudachi", "Raibag", "Hukkeri", "Arabhavi",
+      "Gokak", "Yemkanmardi", "Belagavi Uttar",
+      "Belagavi Dakshin", "Belagavi Rural",
+      "Khanapur", "Kittur"
     ],
-    "Kalaburagi": [
-        "Kalaburagi Uttar", "Kalaburagi Dakshin", "Sedam", "Chittapura",
-        "Aland", "Afzalpur", "Jewargi"
+    "Bangalore Rural": [
+      "Devanahalli", "Doddaballapura",
+      "Nelamangala", "Hosakote", "Magadi", "Kanakapura"
     ],
-    "Dharwad": [
-        "Dharwad", "Hubballi-Dharwad West", "Hubballi-Dharwad Central",
-        "Hubballi-Dharwad East", "Kundgol", "Kalghatgi", "Navalgund"
+    "Bangalore Urban": [
+      "Byatarayanapura", "Yelahanka", "Dasarahalli",
+      "Mahalakshmi Layout", "Malleshwaram",
+      "Rajajinagar", "Govindarajanagar",
+      "Vijayanagar", "Chamrajpet", "Chickpet",
+      "Basavanagudi", "Padmanabhanagar",
+      "B.T.M. Layout", "Jayanagar",
+      "Mahadevapura", "Krishnarajapuram",
+      "C.V. Raman Nagar", "Shivajinagar",
+      "Shanti Nagar", "Gandhinagar",
+      "Pulakeshinagar", "Sarvagnanagar",
+      "Yeshwanthpura", "Bommanahalli",
+      "Rajarajeshwarinagar"
+    ],
+    "Bidar": [
+      "Aurad", "Bhalki", "Basavakalyan",
+      "Humnabad", "Bidar South", "Bidar North"
+    ],
+    "Chamarajanagar": [
+      "Kollegal", "Hanur", "Chamarajanagar", "Gundlupet"
+    ],
+    "Chikkaballapur": [
+      "Gauribidanur", "Bagepalli",
+      "Chikkaballapur", "Sidlaghatta"
+    ],
+    "Chikkamagaluru": [
+      "Sringeri", "Mudigere",
+      "Chikkamagaluru", "Tarikere", "Kadur"
+    ],
+    "Chitradurga": [
+      "Molakalmuru", "Challakere",
+      "Chitradurga", "Hiriyur", "Hosadurga", "Holalkere"
     ],
     "Dakshina Kannada": [
-        "Mangaluru City North", "Mangaluru City South", "Mangaluru",
-        "Bantwal", "Belthangady", "Puttur", "Sullia", "Moodabidri"
+      "Mangaluru City North", "Mangaluru City South",
+      "Mangaluru", "Bantwal", "Belthangady",
+      "Puttur", "Sullia", "Moodabidri"
     ],
-    "Shivamogga": [
-        "Shivamogga Rural", "Shivamogga", "Bhadravathi", "Thirthahalli",
-        "Shikaripura", "Soraba", "Sagara"
+    "Davangere": [
+      "Mayakonda", "Davanagere North",
+      "Davanagere South", "Jagalur",
+      "Harapanahalli", "Harihar", "Honnali"
     ],
-    "Tumakuru": [
-        "Tumakuru City", "Tumakuru Rural", "Tiptur", "Turuvekere",
-        "Kunigal", "Gubbi", "Sira", "Madhugiri", "Pavagada", "Koratagere"
+    "Dharwad": [
+      "Dharwad", "Hubli-Dharwad-East",
+      "Hubli-Dharwad-Central", "Hubli-Dharwad-West",
+      "Kalghatgi", "Kundgol", "Navalgund"
+    ],
+    "Gadag": [
+      "Ron", "Gadag", "Shirahatti",
+      "Nargund", "Mundargi"
     ],
     "Hassan": [
-        "Hassan", "Holenarasipura", "Sakleshpur", "Belur",
-        "Arasikere", "Channarayapatna"
+      "Arasikere", "Belur",
+      "Hassan", "Holenarasipura",
+      "Sakleshpur", "Channarayapatna"
     ],
+    "Haveri": [
+      "Byadgi", "Hirekerur",
+      "Ranebennur", "Haveri",
+      "Shiggaon", "Savanur"
+    ],
+    "Kalaburagi": [
+      "Aland", "Afzalpur",
+      "Jewargi", "Kalaburagi Rural",
+      "Kalaburagi Dakshin", "Kalaburagi Uttar",
+      "Chittapur", "Sedam"
+    ],
+    "Kodagu": [
+      "Madikeri", "Virajpet"
+    ],
+    "Kolar": [
+      "Kolar Gold Field", "Bangarapet",
+      "Kolar", "Malur", "Mulbagal"
+    ],
+    "Koppal": [
+      "Koppal", "Gangawati",
+      "Yelburga", "Kushtagi"
+    ],
+    "Mandya": [
+      "Krishnarajpet", "Nagamangala",
+      "Shrirangapattana", "Pandavapura",
+      "Mandya", "Maddur", "Melukote"
+    ],
+    "Mysore": [
+      "Krishnaraja", "Chamundeshwari",
+      "Narasimharaja", "Chamaraja",
+      "Hunsur", "Heggadadevankote",
+      "Nanjangud", "T.Narasipur"
+    ],
+    "Raichur": [
+      "Devadurga", "Lingsugur",
+      "Raichur Rural", "Raichur",
+      "Manvi", "Sindhanur"
+    ],
+    "Ramanagara": [
+       "Ramanagaram", "Channapatna"
+    ],
+    "Shivamogga": [
+      "Bhadravati", "Shivamogga",
+      "Shivamogga Rural", "Shikaripura",
+      "Sorab", "Sagara", "Tirthahalli"
+    ],
+    "Tumakuru": [
+      "Sira", "Pavagada",
+      "Madhugiri", "Koratagere",
+      "Tumakuru City", "Tumakuru Rural",
+      "Kunigal", "Tiptur",
+      "Turuvekere", "Gubbi"
+    ],
+    "Udupi": [
+      "Kapu", "Udupi", "Kundapura", "Byndoor"
+    ],
+    "Uttara Kannada": [
+      "Karwar", "Kumta",
+      "Bhatkal", "Sirsi",
+      "Yellapur", "Haliyal"
+    ],
+    "Vijayapura": [
+      "Muddebihal", "Devar Hippargi",
+      "Basavana Bagewadi", "Babaleshwar",
+      "Bijapur City", "Nagthan",
+      "Indi", "Sindagi"
+    ],
+    "Yadgir": [
+      "Shahapur", "Shorapur", "Yadgir"
+    ]
   },
 
   "Tamil Nadu": {
-    "Chennai": [
-      "Anna Nagar", "T. Nagar", "Velachery"
-    ],
-    "Coimbatore": [
-      "Coimbatore North", "Coimbatore South"
-    ]
+    "Chennai": ["Anna Nagar", "T. Nagar", "Velachery"],
+    "Coimbatore": ["Coimbatore North", "Coimbatore South"]
   },
 
   "Maharashtra": {
-    "Mumbai": [
-      "Colaba", "Malabar Hill", "Worli"
-    ],
-    "Pune": [
-      "Shivajinagar", "Hadapsar"
-    ]
+    "Mumbai": ["Colaba", "Malabar Hill", "Worli"],
+    "Pune": ["Shivajinagar", "Hadapsar"]
   },
 
   "Delhi": {
-    "New Delhi": [
-      "New Delhi", "Karol Bagh", "Patel Nagar"
-    ]
+    "New Delhi": ["New Delhi", "Karol Bagh", "Patel Nagar"]
   },
 
   "Uttar Pradesh": {
-    "Lucknow": [
-      "Lucknow Central", "Lucknow East"
-    ],
-    "Noida": [
-      "Noida", "Dadri"
-    ]
+    "Lucknow": ["Lucknow Central", "Lucknow East"],
+    "Noida": ["Noida", "Dadri"]
   }
 };

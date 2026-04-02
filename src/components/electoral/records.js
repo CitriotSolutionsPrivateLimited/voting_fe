@@ -43,6 +43,10 @@ const ElectoralRecords = () => {
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [stations, setStations] = useState([]);
+  const [exportLoading, setExportLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const limit = 20;
 
 
   useEffect(() => {
@@ -61,12 +65,20 @@ const ElectoralRecords = () => {
   /* Disable search until typing */
   const isSearchDisabled = !form.pollingStation.trim();
 
-  const handleSearch = async () => {
+  const handleSearch = async (customPage = 1) => {
     setLoading(true);
 
     try {
-      const res = await axios.post("get-records", form);
-      setData(res.data);
+      const res = await axios.post("get-records", {
+        ...form,
+        page: customPage,
+        limit
+      });
+
+      setData(res.data.data);
+      setTotal(res.data.total);
+      setPage(customPage);
+
     } catch (err) {
       console.error(err);
     } finally {
@@ -76,19 +88,27 @@ const ElectoralRecords = () => {
   };
 
   const handleReset = () => {
-    setForm({
-      pollingStation: "",
-    });
-
+    setForm({ pollingStation: "" });
     setData([]);
     setSearched(false);
+    setPage(1);
+    setTotal(0);
   };
 
-  const handleExport = () => {
-    if (!data.length) return;
+  const handleExport = async () => {
+    setExportLoading(true);
 
-    const formattedData = data.map((item, index) => ({
-       "Serial No": item.serialNumber,
+    try {
+      const res = await axios.post("export-voters", {
+        ...form,
+      });
+
+      const fullData = res.data.data;
+
+      if (!fullData.length) return;
+
+      const formattedData = fullData.map((item) => ({
+        "Serial No": item.serialNumber,
         "EPIC No": item.epicNumber,
         Name: item.name,
         Age: item.age,
@@ -100,23 +120,29 @@ const ElectoralRecords = () => {
         Constituency: item.constituency,
         Part: item.part,
         "Polling Station": item.pollingStation,
-    }));
+      }));
 
-    const worksheet = XLSX.utils.json_to_sheet(formattedData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Records");
+      const worksheet = XLSX.utils.json_to_sheet(formattedData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Records");
 
-    const excelBuffer = XLSX.write(workbook, {
+      const excelBuffer = XLSX.write(workbook, {
         bookType: "xlsx",
         type: "array",
-    });
+      });
 
-    const blob = new Blob([excelBuffer], {
+      const blob = new Blob([excelBuffer], {
         type: "application/octet-stream",
-    });
+      });
 
-    saveAs(blob, "electoral_records.xlsx");
-    };
+      saveAs(blob, "electoral_records.xlsx");
+
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setExportLoading(false);
+    }
+  };
 
   const columns = [
      {
@@ -290,7 +316,7 @@ const ElectoralRecords = () => {
                 icon={<SearchOutlined />}
                 loading={loading}
                 disabled={isSearchDisabled}
-                onClick={handleSearch}
+                onClick={() => handleSearch(1)}
               >
                 Search Records
               </Button>
@@ -311,12 +337,13 @@ const ElectoralRecords = () => {
             title={
                 <div className="flex items-center justify-between w-full">
                 <span className="font-semibold">
-                    Records Found: {data.length}
+                    Records Found: {total}
                 </span>
 
                 <Button
                     icon={<DownloadOutlined />}
                     onClick={handleExport}
+                    loading={exportLoading}
                     disabled={!data.length}
                 >
                     Export Excel
@@ -325,19 +352,24 @@ const ElectoralRecords = () => {
             }
             >
             <Table
-                dataSource={data.map((item, i) => ({
-                    ...item,
-                    key: i,
-                }))}
-                columns={columns}
-                pagination={{
-                    pageSize: 10,
-                    showSizeChanger: false,
-                    showTotal: (total, range) =>
-                    `Showing ${range[0]}–${range[1]} of ${total} records`,
-                }}
-                scroll={{ x: "max-content" }}
-                />
+            dataSource={data.map((item, i) => ({
+              ...item,
+              key: i,
+            }))}
+            columns={columns}
+            pagination={{
+              current: page,
+              pageSize: limit,
+              total: total,
+              showSizeChanger: false,
+              onChange: (newPage) => {
+                handleSearch(newPage);
+              },
+              showTotal: (total, range) =>
+                `Showing ${range[0]}–${range[1]} of ${total} records`,
+            }}
+            scroll={{ x: "max-content" }}
+          />
           </Card>
         )}
       </div>
