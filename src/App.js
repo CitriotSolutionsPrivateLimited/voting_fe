@@ -26,7 +26,7 @@ function App() {
         />
         {/* Protected Search Electoral */}
         <Route
-          path="/search"
+          path="/search/:page?"
           element={
             <ProtectedRoute>
               <SearchElectoral />
@@ -36,7 +36,7 @@ function App() {
 
         {/* Protected Electoral Records */}
         <Route
-          path="/records"
+          path="/records/:page?"
           element={
             <ProtectedRoute>
               <ElectoralRecords />

@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Select, Input, DatePicker, Button, Table, Tag, Breadcrumb, Typography, Card, Empty,Divider, message,} from "antd";
-import {
-  SearchOutlined,
-  HomeOutlined,
-  ClearOutlined,
-  EnvironmentOutlined,
-  UserOutlined,
-  TeamOutlined,
-  IdcardOutlined,
-  FileSearchOutlined,
-  DownloadOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined, HomeOutlined, ClearOutlined, EnvironmentOutlined, UserOutlined, TeamOutlined, IdcardOutlined, FileSearchOutlined, DownloadOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import Header from "../header/header";
 import axios from "../../utils/axios";
 import { INDIA_DATA } from "../data/indiadata";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import { useParams, useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -36,6 +27,8 @@ const FieldWrapper = ({ label, children }) => (
 );
 
 const SearchElectoral = () => {
+  const { page: pageParam } = useParams();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     state: "",
     district: "",
@@ -50,9 +43,9 @@ const SearchElectoral = () => {
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [exportLoading, setExportLoading] = useState(false);
-  const [page, setPage] = useState(1);
+  const [uiPage, setUiPage] = useState(Number(pageParam) || 1);
   const [total, setTotal] = useState(0);
-  const limit = 20;
+  const [pageSize, setPageSize] = useState(25);
 
   const states = Object.keys(INDIA_DATA);
   const districts = form.state ? Object.keys(INDIA_DATA[form.state] || {}) : [];
@@ -74,34 +67,44 @@ const SearchElectoral = () => {
     fetchStations();
   }, []);
 
-  const handleSearch = async (customPage = page) => {
-    const anyFilled = Object.values(form).some((v) => v);
+  const handleSearch = async (
+      page = uiPage,
+      size = pageSize
+    ) => {
+      const anyFilled = Object.values(form).some((v) => v);
 
-    if (!anyFilled) {
-      message.warning("Please enter at least one search field");
-      return;
-    }
+      if (!anyFilled) {
+        message.warning("Please enter at least one search field");
+        return;
+      }
 
-    setLoading(true);
-    try {
-      const res = await axios.post("search-voter", {
-        ...form,
-        page: customPage,
-        limit
-      });
+      setLoading(true);
 
-      setData(res.data.data);
-      setTotal(res.data.total);
-      setPage(customPage);
+      try {
+        const res = await axios.post("search-voter", {
+          ...form,
+          page,
+          pageSize: size,
+        });
 
-    } catch (err) {
-      console.error(err);
-      message.error("Something went wrong while searching");
-    } finally {
-      setSearched(true);
-      setLoading(false);
-    }
-  };
+        setData(res.data.data);
+        setTotal(res.data.total);
+
+      } catch (err) {
+        console.error(err);
+        message.error("Something went wrong");
+      } finally {
+        setSearched(true);
+        setLoading(false);
+      }
+    };
+
+
+    const goToPage = (page, size = pageSize) => {
+      setUiPage(page);
+      navigate(`/search/${page}`, { replace: true });
+      handleSearch(page, size);
+    };
 
   const handleReset = () => {
       setForm({
@@ -115,8 +118,9 @@ const SearchElectoral = () => {
       });
       setData([]);
       setSearched(false);
-      setPage(1);
+      setUiPage(1);
       setTotal(0);
+      navigate(`/search`, { replace: true });
     };
 
   const handleExport = async () => {
@@ -487,7 +491,11 @@ const SearchElectoral = () => {
               type="primary"
               icon={<SearchOutlined />}
               loading={loading}
-              onClick={() => handleSearch(1)}
+              onClick={() =>{
+                setUiPage(1);
+                navigate(`/search/1`, { replace: true });
+                handleSearch(1);
+              }}
               className="!rounded-xl !h-10 !px-7 !font-semibold !border-none"
               style={{
                 background:
@@ -557,21 +565,33 @@ const SearchElectoral = () => {
         >
           <div className="w-full overflow-x-auto">
             <Table
-              className="se-table"
-              dataSource={data.map((item, i) => ({ ...item, key: i }))}
+                dataSource={data.map((item) => ({
+                  ...item,
+                  key: item.epicNumber,
+                }))}
               columns={columns}
               pagination={{
-                current: page,
-                pageSize: limit,
-                total: total,
-                showSizeChanger: false,
-                showQuickJumper: false,
-                onChange: (newPage) => {
-                    handleSearch(newPage);
-                  },
-                showTotal: (total, range) =>
-                  `Showing ${range[0]}–${range[1]} of ${total} records`,
-              }}
+              current: uiPage,
+              pageSize: pageSize,
+              total: total,
+
+              showSizeChanger: true,
+              pageSizeOptions: ["25", "50", "75", "100"],
+
+              onChange: (page, size) => {
+                setUiPage(page);
+                setPageSize(size);
+                goToPage(page, size); 
+                handleSearch(page, size);
+              },
+
+              onShowSizeChange: (page, size) => {
+                setUiPage(1);
+                setPageSize(size);
+                goToPage(1, size);
+                handleSearch(1, size);
+              },
+            }}
               scroll={{ x: "max-content" }}
               size="middle"
             />

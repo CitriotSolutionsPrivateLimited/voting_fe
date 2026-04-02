@@ -21,6 +21,7 @@ import axios from "../../utils/axios";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { DownloadOutlined } from "@ant-design/icons";
+import { useParams, useNavigate } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -35,6 +36,8 @@ const FieldWrapper = ({ label, children }) => (
 );
 
 const ElectoralRecords = () => {
+  const { page: pageParam } = useParams();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     pollingStation: "",
   });
@@ -44,7 +47,7 @@ const ElectoralRecords = () => {
   const [loading, setLoading] = useState(false);
   const [stations, setStations] = useState([]);
   const [exportLoading, setExportLoading] = useState(false);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(Number(pageParam) || 1);
   const [total, setTotal] = useState(0);
   const limit = 20;
 
@@ -67,12 +70,13 @@ const ElectoralRecords = () => {
 
   const handleSearch = async (customPage = 1) => {
     setLoading(true);
+    navigate(`/records/${customPage}`, { replace: true });
 
     try {
       const res = await axios.post("get-records", {
         ...form,
         page: customPage,
-        limit
+        limit,
       });
 
       setData(res.data.data);
@@ -93,6 +97,7 @@ const ElectoralRecords = () => {
     setSearched(false);
     setPage(1);
     setTotal(0);
+    navigate(`/records`, { replace: true });
   };
 
   const handleExport = async () => {
