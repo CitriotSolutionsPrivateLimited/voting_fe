@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Select, Input, DatePicker, Button, Table, Tag, Breadcrumb, Typography, Card, Empty,Divider, message,} from "antd";
+import { Select, Input, Button, Table, Tag, Breadcrumb, Typography, Card, Empty,Divider, message,} from "antd";
 import { SearchOutlined, HomeOutlined, ClearOutlined, EnvironmentOutlined, UserOutlined, TeamOutlined, IdcardOutlined, FileSearchOutlined, DownloadOutlined } from "@ant-design/icons";
-import dayjs from "dayjs";
 import Header from "../header/header";
 import axios from "../../utils/axios";
 import { INDIA_DATA } from "../data/indiadata";
@@ -35,7 +34,7 @@ const SearchElectoral = () => {
     constituency: "",
     name: "",
     relativeName: "",
-    dob: "",
+    age: "",
     pollingStation: "",
   });
   const [stations, setStations] = useState([]);
@@ -113,7 +112,7 @@ const SearchElectoral = () => {
         constituency: "",
         name: "",
         relativeName: "",
-        dob: "",
+        age: "",
         pollingStation: ""
       });
       setData([]);
@@ -433,18 +432,21 @@ const SearchElectoral = () => {
             />
           </FieldWrapper>
 
-          <FieldWrapper label="Date of Birth">
-            <DatePicker
-              className="se-picker"
-              placeholder="Select date of birth"
-              value={form.dob ? dayjs(form.dob) : null}
-              onChange={(date) =>
+          <FieldWrapper label="Age">
+            <Input
+              className="se-input"
+              type="number"
+              min={0}
+              max={120}
+              placeholder="Enter age (e.g. 25)"
+              value={form.age}
+              onChange={(e) =>
                 setForm((prev) => ({
                   ...prev,
-                  dob: date ? dayjs(date).format("DD-MM-YYYY") : "",
+                  age: e.target.value,
                 }))
               }
-              format="DD-MM-YYYY"
+              allowClear
             />
           </FieldWrapper>
 
