@@ -26,10 +26,21 @@ const Home = () => {
       title: "Get Records",
       description:
         "View the records based on School (polling station).",
-      route: "/records",  
+      route: "/records",
       accent: "#0ea5e9",
       bg: "#e0f2fe",
       border: "#bae6fd",
+    },
+
+    {
+      icon: "⬇️",
+      title: "Export Data",
+      description:
+        "Export voters by selecting state, district and constituency.",
+      route: "/export",
+      accent: "#16a34a",
+      bg: "#ecfdf5",
+      border: "#bbf7d0",
     },
   ];
 

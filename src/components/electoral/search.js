@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Select, Input, Button, Table, Tag, Breadcrumb, Typography, Card, Empty,Divider, message,} from "antd";
-import { SearchOutlined, HomeOutlined, ClearOutlined, EnvironmentOutlined, UserOutlined, TeamOutlined, IdcardOutlined, FileSearchOutlined, DownloadOutlined } from "@ant-design/icons";
+import { SearchOutlined, HomeOutlined, ClearOutlined, EnvironmentOutlined, UserOutlined, TeamOutlined, IdcardOutlined, FileSearchOutlined } from "@ant-design/icons";
 import Header from "../header/header";
 import axios from "../../utils/axios";
 import { INDIA_DATA } from "../data/indiadata";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
 import { useParams, useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
@@ -41,7 +39,6 @@ const SearchElectoral = () => {
   const [data, setData] = useState([]);
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [exportLoading, setExportLoading] = useState(false);
   const [uiPage, setUiPage] = useState(Number(pageParam) || 1);
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(25);
@@ -125,59 +122,6 @@ const SearchElectoral = () => {
       setTotal(0);
       navigate(`/search`, { replace: true });
     };
-
-  const handleExport = async () => {
-    setExportLoading(true);
-
-    try {
-      const res = await axios.post("export-voters", {
-        ...form,
-      });
-
-      const fullData = res.data.data;
-
-      if (!fullData.length) {
-        message.warning("No data to export");
-        return;
-      }
-
-      const formattedData = fullData.map((item) => ({
-        "Serial No": item.serialNumber,
-        "EPIC No": item.epicNumber,
-        Name: item.name,
-        Age: item.age,
-        "Relative Name": item.relativeName,
-        Relation: item.relation,
-        Gender: item.gender,
-        State: item.state,
-        District: item.district,
-        Constituency: item.constituency,
-        Part: item.part,
-        "Polling Station": item.pollingStation,
-      }));
-
-      const worksheet = XLSX.utils.json_to_sheet(formattedData);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Voters");
-
-      const excelBuffer = XLSX.write(workbook, {
-        bookType: "xlsx",
-        type: "array",
-      });
-
-      const file = new Blob([excelBuffer], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-
-      saveAs(file, "voter_data.xlsx");
-
-    } catch (err) {
-      console.error(err);
-      message.error("Export failed");
-    } finally {
-      setExportLoading(false);
-    }
-  };
 
   /* ── Table Columns ── */
   const columns = [
@@ -556,15 +500,6 @@ const SearchElectoral = () => {
                 {total} voters found
               </Tag>
 
-              <Button
-                icon={<DownloadOutlined />}
-                onClick={handleExport}
-                loading={exportLoading}
-                disabled={!data.length}
-                className="!rounded-lg !font-medium"
-              >
-                Export Excel
-              </Button>
             </div>
           </div>
           }

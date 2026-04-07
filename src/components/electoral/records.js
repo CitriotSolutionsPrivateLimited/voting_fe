@@ -18,9 +18,6 @@ import {
 } from "@ant-design/icons";
 import Header from "../header/header";
 import axios from "../../utils/axios";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
-import { DownloadOutlined } from "@ant-design/icons";
 import { useParams, useNavigate } from "react-router-dom";
 
 const { Option } = Select;
@@ -46,7 +43,6 @@ const ElectoralRecords = () => {
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [stations, setStations] = useState([]);
-  const [exportLoading, setExportLoading] = useState(false);
   const [page, setPage] = useState(Number(pageParam) || 1);
   const [total, setTotal] = useState(0);
   const limit = 20;
@@ -98,55 +94,6 @@ const ElectoralRecords = () => {
     setPage(1);
     setTotal(0);
     navigate(`/records`, { replace: true });
-  };
-
-  const handleExport = async () => {
-    setExportLoading(true);
-
-    try {
-      const res = await axios.post("export-voters", {
-        ...form,
-      });
-
-      const fullData = res.data.data;
-
-      if (!fullData.length) return;
-
-      const formattedData = fullData.map((item) => ({
-        "Serial No": item.serialNumber,
-        "EPIC No": item.epicNumber,
-        Name: item.name,
-        Age: item.age,
-        "Relative Name": item.relativeName,
-        Relation: item.relation,
-        Gender: item.gender,
-        State: item.state,
-        District: item.district,
-        Constituency: item.constituency,
-        Part: item.part,
-        "Polling Station": item.pollingStation,
-      }));
-
-      const worksheet = XLSX.utils.json_to_sheet(formattedData);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Records");
-
-      const excelBuffer = XLSX.write(workbook, {
-        bookType: "xlsx",
-        type: "array",
-      });
-
-      const blob = new Blob([excelBuffer], {
-        type: "application/octet-stream",
-      });
-
-      saveAs(blob, "electoral_records.xlsx");
-
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setExportLoading(false);
-    }
   };
 
   const columns = [
@@ -344,15 +291,6 @@ const ElectoralRecords = () => {
                 <span className="font-semibold">
                     Records Found: {total}
                 </span>
-
-                <Button
-                    icon={<DownloadOutlined />}
-                    onClick={handleExport}
-                    loading={exportLoading}
-                    disabled={!data.length}
-                >
-                    Export Excel
-                </Button>
                 </div>
             }
             >

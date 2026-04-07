@@ -6,6 +6,7 @@ import Home from "./components/homepage/home";
 import ProtectedRoute from "./components/protectedRoute";
 import SearchElectoral from "./components/electoral/search";
 import ElectoralRecords from "./components/electoral/records";
+import ExportElectoral from "./components/electoral/export";
 
 function App() {
   return (
@@ -40,6 +41,16 @@ function App() {
           element={
             <ProtectedRoute>
               <ElectoralRecords />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected Export Electoral */}
+        <Route
+          path="/export"
+          element={
+            <ProtectedRoute>
+              <ExportElectoral />
             </ProtectedRoute>
           }
         />
