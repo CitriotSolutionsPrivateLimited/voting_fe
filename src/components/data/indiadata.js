@@ -31,7 +31,7 @@ export const INDIA_DATA = {
       "Shanti Nagar", "Gandhinagar",
       "Pulakeshinagar", "Sarvagnanagar",
       "Yeshwanthpura", "Bommanahalli",
-      "Rajarajeshwarinagar"
+      "Rajarajeshwarinagar", "Bharathi Nagar", "Binnypet"
     ],
     "Bidar": [
       "Aurad", "Bhalki", "Basavakalyan",

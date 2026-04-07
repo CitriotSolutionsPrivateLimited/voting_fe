@@ -46,11 +46,15 @@ const SearchElectoral = () => {
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(25);
 
-  const states = Object.keys(INDIA_DATA);
-  const districts = form.state ? Object.keys(INDIA_DATA[form.state] || {}) : [];
+  const states = Object.keys(INDIA_DATA).sort((a, b) => a.localeCompare(b));
+  const districts = form.state
+    ? Object.keys(INDIA_DATA[form.state] || {})
+        .sort((a, b) => a.localeCompare(b))
+    : [];
   const constituencies =
     form.state && form.district
-      ? INDIA_DATA[form.state]?.[form.district] || []
+      ? [...(INDIA_DATA[form.state]?.[form.district] || [])]
+          .sort((a, b) => a.localeCompare(b))
       : [];
 
   useEffect(() => {
