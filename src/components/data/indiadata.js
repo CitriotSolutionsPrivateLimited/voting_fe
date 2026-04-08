@@ -17,21 +17,13 @@ export const INDIA_DATA = {
     ],
     "Bangalore Rural": [
       "Devanahalli", "Doddaballapura",
-      "Nelamangala", "Hosakote", "Magadi", "Kanakapura"
+      "Nelamangala", "Hosakote", "Magadi", "Kanakpura", "Ramanagara", "Channapatna", "Sathanur"
     ],
     "Bangalore Urban": [
-      "Byatarayanapura", "Yelahanka", "Dasarahalli",
-      "Mahalakshmi Layout", "Malleshwaram",
-      "Rajajinagar", "Govindarajanagar",
-      "Vijayanagar", "Chamrajpet", "Chickpet",
-      "Basavanagudi", "Padmanabhanagar",
-      "B.T.M. Layout", "Jayanagar", "Jayamahal",
-      "Mahadevapura", "Krishnarajapuram",
-      "C.V. Raman Nagar", "Shivajinagar",
-      "Shanti Nagar", "Gandhinagar",
-      "Pulakeshinagar", "Sarvagnanagar",
-      "Yeshwanthpura", "Bommanahalli",
-      "Rajarajeshwarinagar", "Bharathi Nagar", "Binnypet"
+      "Yelahanka", "Malleshwaram",
+      "Rajajinagar", "Chamrajpet", "Chickpet",
+      "Basavanagudi", "Jayanagar", "Jayamahal", "Shivajinagar",
+      "Shanti Nagar", "Gandhinagar","Bharathi Nagar", "Binnypet"
     ],
     "Bidar": [
       "Aurad", "Bhalki", "Basavakalyan",
