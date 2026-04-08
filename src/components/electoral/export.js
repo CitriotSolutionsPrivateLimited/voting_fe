@@ -82,6 +82,12 @@ const ExportElectoral = () => {
       const initRes = await axios.post("init-export", form);
       const { exportId, total: totalCount } = initRes.data;
 
+      if (!totalCount || totalCount === 0) {
+        message.warning("No data found for selected filters");
+        setLoading(false);
+        return;
+      }
+
       setTotal(totalCount);
 
       // Step 2: Start polling for progress BEFORE the download begins
