@@ -42,6 +42,7 @@ const SearchElectoral = () => {
   const [uiPage, setUiPage] = useState(Number(pageParam) || 1);
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(25);
+  const [stationsLoading, setStationsLoading] = useState(false);
 
   const states = Object.keys(INDIA_DATA).sort((a, b) => a.localeCompare(b));
   const districts = form.state
@@ -56,11 +57,14 @@ const SearchElectoral = () => {
 
   useEffect(() => {
     const fetchStations = async () => {
+      setStationsLoading(true); // ✅ start loading
       try {
         const res = await axios.get("polling-stations");
         setStations(res.data);
       } catch (err) {
         console.error(err);
+      } finally {
+        setStationsLoading(false); // ✅ stop loading
       }
     };
 
@@ -408,6 +412,10 @@ const SearchElectoral = () => {
                   ...prev,
                   pollingStation: value || "",
                 }))
+              }
+              loading={stationsLoading}
+              notFoundContent={
+                stationsLoading ? "Loading stations..." : "No stations found"
               }
               allowClear
               showSearch

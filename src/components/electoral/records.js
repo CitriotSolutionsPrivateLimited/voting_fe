@@ -43,6 +43,7 @@ const ElectoralRecords = () => {
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [stations, setStations] = useState([]);
+  const [stationsLoading, setStationsLoading] = useState(false);
   const [page, setPage] = useState(Number(pageParam) || 1);
   const [total, setTotal] = useState(0);
   const limit = 20;
@@ -50,11 +51,14 @@ const ElectoralRecords = () => {
 
   useEffect(() => {
     const fetchStations = async () => {
+      setStationsLoading(true);
       try {
         const res = await axios.get("polling-stations");
         setStations(res.data);
       } catch (err) {
         console.error(err);
+      } finally {
+        setStationsLoading(false);
       }
     };
 
@@ -227,6 +231,14 @@ const ElectoralRecords = () => {
                 allowClear
                 optionFilterProp="children"
                 className="w-full"
+
+                loading={stationsLoading}  // ✅ spinner
+                notFoundContent={
+                  stationsLoading ? "Loading stations..." : "No stations found"
+                }
+
+                virtual                 // ✅ HUGE performance boost
+                listHeight={300}       // ✅ smoother scrolling
               >
                 {stations.map((station) => (
                   <Option key={station} value={station}>
