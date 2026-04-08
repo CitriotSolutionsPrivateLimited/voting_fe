@@ -25,7 +25,7 @@ export const INDIA_DATA = {
       "Rajajinagar", "Govindarajanagar",
       "Vijayanagar", "Chamrajpet", "Chickpet",
       "Basavanagudi", "Padmanabhanagar",
-      "B.T.M. Layout", "Jayanagar",
+      "B.T.M. Layout", "Jayanagar", "Jayamahal",
       "Mahadevapura", "Krishnarajapuram",
       "C.V. Raman Nagar", "Shivajinagar",
       "Shanti Nagar", "Gandhinagar",
