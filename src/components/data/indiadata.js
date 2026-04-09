@@ -20,7 +20,7 @@ export const INDIA_DATA = {
       "Nelamangala", "Hosakote", "Magadi", "Kanakpura", "Ramanagara", "Channapatna", "Sathanur"
     ],
     "Bangalore Urban": [
-      "Yelahanka", "Malleshwaram",
+      "Yelahanka", "Malleshwaram", "Anekal", "Uttarahalli", "Varthur",
       "Rajajinagar", "Chamrajpet", "Chickpet",
       "Basavanagudi", "Jayanagar", "Jayamahal", "Shivajinagar",
       "Shanti Nagar", "Gandhinagar","Bharathi Nagar", "Binnypet"
