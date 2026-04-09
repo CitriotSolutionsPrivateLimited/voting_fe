@@ -11,17 +11,19 @@ const { Text } = Typography;
 const { Option } = Select;
 
 /* ── Shared field wrapper ── */
-const FieldWrapper = ({ label, children }) => (
-  <div className="flex flex-col gap-1.5">
-    <label className="text-xs font-semibold text-slate-500 tracking-wide uppercase">
-      {label}{" "}
-      <span className="text-slate-300 font-normal normal-case tracking-normal">
-        (optional)
-      </span>
-    </label>
-    {children}
-  </div>
-);
+const FieldWrapper = ({ label, children, optional = true }) => (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-semibold text-slate-500 tracking-wide uppercase">
+        {label}{" "}
+        {optional && (
+          <span className="text-slate-300 font-normal normal-case tracking-normal">
+            (optional)
+          </span>
+        )}
+      </label>
+      {children}
+    </div>
+  );
 
 const SearchElectoral = () => {
   const { page: pageParam } = useParams();
@@ -227,6 +229,14 @@ const SearchElectoral = () => {
     },
   ];
 
+  const isLocationSelected =
+    form.state && form.district && form.constituency;
+
+  const isAdditionalFieldFilled =
+    form.name || form.relativeName || form.age || form.pollingStation;
+
+  const isSearchEnabled = isLocationSelected && isAdditionalFieldFilled;
+
   return (
   <div className="min-h-screen w-full overflow-x-hidden bg-[linear-gradient(135deg,#f0f5ff_0%,#e8f4fd_50%,#f0fdf4_100%)] font-sans box-border">
 
@@ -284,7 +294,7 @@ const SearchElectoral = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          <FieldWrapper label="State">
+          <FieldWrapper label="State" optional={false}>
             <Select
               className="se-select w-full"
               placeholder="Select State"
@@ -307,7 +317,7 @@ const SearchElectoral = () => {
             </Select>
           </FieldWrapper>
 
-          <FieldWrapper label="District">
+          <FieldWrapper label="District" optional={false}>
             <Select
               className="se-select w-full"
               placeholder="Select District"
@@ -326,7 +336,7 @@ const SearchElectoral = () => {
             </Select>
           </FieldWrapper>
 
-          <FieldWrapper label="Constituency">
+          <FieldWrapper label="Constituency" optional={false}>
             <Select
               className="se-select w-full"
               placeholder="Select Constituency"
@@ -346,95 +356,107 @@ const SearchElectoral = () => {
           </FieldWrapper>
         </div>
 
-        {/* Voter Details */}
-        <div className="flex items-center gap-3 mb-4">
-          <span className="flex items-center gap-1.5 text-xs font-bold tracking-widest text-slate-400 uppercase whitespace-nowrap">
-            <UserOutlined className="text-blue-400" /> Voter Details
-          </span>
-          <Divider className="!m-0 flex-1 !border-slate-100" />
-        </div>
+        {!isLocationSelected && (
+          <p className="text-xs text-slate-400 mb-4">
+            Please select State, District and Constituency first
+          </p>
+        )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <FieldWrapper label="Voter Name">
-            <Input
-              className="se-input"
-              prefix={<UserOutlined className="text-slate-300 text-sm" />}
-              placeholder="e.g. John Doe"
-              value={form.name}
-              onChange={(e) =>
-                setForm((prev) => ({ ...prev, name: e.target.value }))
-              }
-              allowClear
-            />
-          </FieldWrapper>
+        {isLocationSelected && (
+        <>
+          {/* Voter Details */}
+          <div className="flex items-center gap-3 mb-4">
+            <span className="flex items-center gap-1.5 text-xs font-bold tracking-widest text-slate-400 uppercase whitespace-nowrap">
+              <UserOutlined className="text-blue-400" /> Voter Details
+            </span>
+            <Divider className="!m-0 flex-1 !border-slate-100" />
+          </div>
 
-          <FieldWrapper label="Relative's Name">
-            <Input
-              className="se-input"
-              prefix={<TeamOutlined className="text-slate-300 text-sm" />}
-              placeholder="Father / Husband"
-              value={form.relativeName}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  relativeName: e.target.value,
-                }))
-              }
-              allowClear
-            />
-          </FieldWrapper>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <FieldWrapper label="Voter Name">
+              <Input
+                className="se-input"
+                prefix={<UserOutlined className="text-slate-300 text-sm" />}
+                placeholder="e.g. John Doe"
+                value={form.name}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, name: e.target.value }))
+                }
+                allowClear
+              />
+            </FieldWrapper>
 
-          <FieldWrapper label="Age">
-            <Input
-              className="se-input"
-              type="number"
-              min={0}
-              max={120}
-              placeholder="Enter age (e.g. 25)"
-              value={form.age}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  age: e.target.value,
-                }))
-              }
-              allowClear
-            />
-          </FieldWrapper>
+            <FieldWrapper label="Relative's Name">
+              <Input
+                className="se-input"
+                prefix={<TeamOutlined className="text-slate-300 text-sm" />}
+                placeholder="Father / Husband"
+                value={form.relativeName}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    relativeName: e.target.value,
+                  }))
+                }
+                allowClear
+              />
+            </FieldWrapper>
 
-          <FieldWrapper label="Polling Station / School">
-            <Select
-              className="se-select w-full"
-              placeholder="Select Polling Station"
-              value={form.pollingStation || undefined}
-              onChange={(value) =>
-                setForm((prev) => ({
-                  ...prev,
-                  pollingStation: value || "",
-                }))
-              }
-              loading={stationsLoading}
-              notFoundContent={
-                stationsLoading ? "Loading stations..." : "No stations found"
-              }
-              allowClear
-              showSearch
-              optionFilterProp="children"
-            >
-              {stations.map((station) => (
-                <Option key={station} value={station}>
-                  {station}
-                </Option>
-              ))}
-            </Select>
-          </FieldWrapper>
-        </div>
+            <FieldWrapper label="Age">
+              <Input
+                className="se-input"
+                type="number"
+                min={0}
+                max={120}
+                placeholder="Enter age (e.g. 25)"
+                value={form.age}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    age: e.target.value,
+                  }))
+                }
+                allowClear
+              />
+            </FieldWrapper>
+
+            <FieldWrapper label="Polling Station / School">
+              <Select
+                className="se-select w-full"
+                placeholder="Select Polling Station"
+                value={form.pollingStation || undefined}
+                onChange={(value) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    pollingStation: value || "",
+                  }))
+                }
+                loading={stationsLoading}
+                notFoundContent={
+                  stationsLoading ? "Loading stations..." : "No stations found"
+                }
+                allowClear
+                showSearch
+                optionFilterProp="children"
+              >
+                {stations.map((station) => (
+                  <Option key={station} value={station}>
+                    {station}
+                  </Option>
+                ))}
+              </Select>
+            </FieldWrapper>
+          </div>
+        </>
+      )}
 
         {/* Actions */}
         <div className="flex flex-wrap items-center justify-between gap-3 mt-6 pt-5 border-t border-slate-100">
-          <Text className="!text-xs !text-slate-400">
-            💡 At least one field required to search
-          </Text>
+          {isLocationSelected && (
+            <Text className="!text-xs !text-slate-400">
+              💡 At least one field in voter detials is required to search
+            </Text>
+          )}
 
           <div className="flex items-center gap-3">
             <Button
@@ -449,6 +471,7 @@ const SearchElectoral = () => {
               type="primary"
               icon={<SearchOutlined />}
               loading={loading}
+              disabled={!isSearchEnabled}
               onClick={() =>{
                 setUiPage(1);
                 navigate(`/search/1`, { replace: true });
@@ -531,14 +554,12 @@ const SearchElectoral = () => {
                 setUiPage(page);
                 setPageSize(size);
                 goToPage(page, size); 
-                handleSearch(page, size);
               },
 
               onShowSizeChange: (page, size) => {
                 setUiPage(1);
                 setPageSize(size);
                 goToPage(1, size);
-                handleSearch(1, size);
               },
             }}
               scroll={{ x: "max-content" }}

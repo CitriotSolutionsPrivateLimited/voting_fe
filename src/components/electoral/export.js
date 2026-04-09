@@ -171,7 +171,7 @@ const ExportElectoral = () => {
     option?.children?.toLowerCase().includes(input.toLowerCase());
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[linear-gradient(135deg,#f0f5ff_0%,#e8f4fd_50%,#f0fdf4_100%)]">
       <Header />
 
       <div className="max-w-4xl mx-auto p-6">
