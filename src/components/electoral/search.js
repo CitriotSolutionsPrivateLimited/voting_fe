@@ -59,19 +59,37 @@ const SearchElectoral = () => {
 
   useEffect(() => {
     const fetchStations = async () => {
-      setStationsLoading(true); // ✅ start loading
+      if (!form.state || !form.district || !form.constituency) {
+        setStations([]);
+        return;
+      }
+
+      setStationsLoading(true);
+
       try {
-        const res = await axios.get("polling-stations");
+        const res = await axios.get("polling-stations", {
+          params: {
+            state: form.state,
+            district: form.district,
+            constituency: form.constituency,
+          },
+        });
+
         setStations(res.data);
       } catch (err) {
         console.error(err);
       } finally {
-        setStationsLoading(false); // ✅ stop loading
+        setStationsLoading(false);
       }
     };
 
     fetchStations();
-  }, []);
+  }, [form.state, form.district, form.constituency]);
+
+
+  useEffect(() => {
+    setForm(prev => ({ ...prev, pollingStation: "" }));
+  }, [form.state, form.district, form.constituency]);
 
   const handleSearch = async (
       page = uiPage,
