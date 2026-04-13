@@ -95,10 +95,9 @@ const SearchElectoral = () => {
       page = uiPage,
       size = pageSize
     ) => {
-      const anyFilled = Object.values(form).some((v) => v);
 
-      if (!anyFilled) {
-        message.warning("Please enter at least one search field");
+      if (!form.pollingStation) {
+        message.warning("Please select Polling Station");
         return;
       }
 
@@ -250,10 +249,8 @@ const SearchElectoral = () => {
   const isLocationSelected =
     form.state && form.district && form.constituency;
 
-  const isAdditionalFieldFilled =
-    form.name || form.relativeName || form.age || form.pollingStation;
-
-  const isSearchEnabled = isLocationSelected && isAdditionalFieldFilled;
+  const isSearchEnabled =
+  isLocationSelected && form.pollingStation;
 
   return (
   <div className="min-h-screen w-full overflow-x-hidden bg-[linear-gradient(135deg,#f0f5ff_0%,#e8f4fd_50%,#f0fdf4_100%)] font-sans box-border">
@@ -408,7 +405,7 @@ const SearchElectoral = () => {
               <Input
                 className="se-input"
                 prefix={<TeamOutlined className="text-slate-300 text-sm" />}
-                placeholder="Father / Husband"
+                placeholder="Father / Husband / Mother"
                 value={form.relativeName}
                 onChange={(e) =>
                   setForm((prev) => ({
@@ -438,7 +435,7 @@ const SearchElectoral = () => {
               />
             </FieldWrapper>
 
-            <FieldWrapper label="Polling Station / School">
+            <FieldWrapper label="Polling Station / School" optional={false}>
               <Select
                 className="se-select w-full"
                 placeholder="Select Polling Station"
@@ -472,7 +469,7 @@ const SearchElectoral = () => {
         <div className="flex flex-wrap items-center justify-between gap-3 mt-6 pt-5 border-t border-slate-100">
           {isLocationSelected && (
             <Text className="!text-xs !text-slate-400">
-              💡 At least one field in voter detials is required to search
+              💡 Polling Station is required. You can optionally add other details to refine search
             </Text>
           )}
 
