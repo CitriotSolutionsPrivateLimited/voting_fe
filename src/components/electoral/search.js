@@ -6,10 +6,10 @@ import Header from "../header/header";
 import axios from "../../utils/axios";
 import { INDIA_DATA } from "../data/indiadata";
 import { useParams, useNavigate } from "react-router-dom";
-
+ 
 const { Text } = Typography;
 const { Option } = Select;
-
+ 
 /* ── Shared field wrapper ── */
 const FieldWrapper = ({ label, children, optional = true }) => (
     <div className="flex flex-col gap-1.5">
@@ -24,7 +24,7 @@ const FieldWrapper = ({ label, children, optional = true }) => (
       {children}
     </div>
   );
-
+ 
 const SearchElectoral = () => {
   const { page: pageParam } = useParams();
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ const SearchElectoral = () => {
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(25);
   const [stationsLoading, setStationsLoading] = useState(false);
-
+ 
   const states = Object.keys(INDIA_DATA).sort((a, b) => a.localeCompare(b));
   const districts = form.state
     ? Object.keys(INDIA_DATA[form.state] || {})
@@ -56,16 +56,16 @@ const SearchElectoral = () => {
       ? [...(INDIA_DATA[form.state]?.[form.district] || [])]
           .sort((a, b) => a.localeCompare(b))
       : [];
-
+ 
   useEffect(() => {
     const fetchStations = async () => {
       if (!form.state || !form.district || !form.constituency) {
         setStations([]);
         return;
       }
-
+ 
       setStationsLoading(true);
-
+ 
       try {
         const res = await axios.get("polling-stations", {
           params: {
@@ -74,7 +74,7 @@ const SearchElectoral = () => {
             constituency: form.constituency,
           },
         });
-
+ 
         setStations(res.data);
       } catch (err) {
         console.error(err);
@@ -82,39 +82,39 @@ const SearchElectoral = () => {
         setStationsLoading(false);
       }
     };
-
+ 
     fetchStations();
   }, [form.state, form.district, form.constituency]);
-
-
+ 
+ 
   useEffect(() => {
     setForm(prev => ({ ...prev, pollingStation: "" }));
   }, [form.state, form.district, form.constituency]);
-
+ 
   const handleSearch = async (
       page = uiPage,
       size = pageSize
     ) => {
-
+ 
       const anyFilled = Object.values(form).some((v) => v);
-
+ 
       if (!anyFilled) {
         message.warning("Please enter at least one search field");
         return;
       }
-
+ 
       setLoading(true);
-
+ 
       try {
         const res = await axios.post("search-voter", {
           ...form,
           page,
           pageSize: size,
         });
-
+ 
         setData(res.data.data);
         setTotal(res.data.total);
-
+ 
       } catch (err) {
         console.error(err);
         message.error("Something went wrong");
@@ -123,14 +123,14 @@ const SearchElectoral = () => {
         setLoading(false);
       }
     };
-
-
+ 
+ 
     const goToPage = (page, size = pageSize) => {
       setUiPage(page);
       navigate(`/search/${page}`, { replace: true });
       handleSearch(page, size);
     };
-
+ 
   const handleReset = () => {
       setForm({
         state: "",
@@ -147,7 +147,7 @@ const SearchElectoral = () => {
       setTotal(0);
       navigate(`/search`, { replace: true });
     };
-
+ 
   /* ── Table Columns ── */
   const columns = [
     {
@@ -247,25 +247,25 @@ const SearchElectoral = () => {
       render: (v) => <span className="text-slate-500 text-sm">{v}</span>,
     },
   ];
-
+ 
   const isLocationSelected =
     form.state && form.district && form.constituency;
-
+ 
   const isAdditionalFieldFilled =
     form.name || form.relativeName || form.age || form.pollingStation;
-
+ 
   const isSearchEnabled = isLocationSelected && isAdditionalFieldFilled;
-
+ 
   return (
   <div className="min-h-screen w-full overflow-x-hidden bg-[linear-gradient(135deg,#f0f5ff_0%,#e8f4fd_50%,#f0fdf4_100%)] font-sans box-border">
-
+ 
     {/* KEEP YOUR STYLE BLOCK (Ant overrides) */}
     <style>{` /* keep your existing styles here unchanged */ `}</style>
-
+ 
     <Header />
-
+ 
     <div className="max-w-[1280px] w-full mx-auto px-4 py-7 box-border">
-
+ 
       {/* Breadcrumb */}
       <Breadcrumb
         className="mb-5"
@@ -286,7 +286,7 @@ const SearchElectoral = () => {
           },
         ]}
       />
-
+ 
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
         <div>
@@ -294,16 +294,16 @@ const SearchElectoral = () => {
             <FileSearchOutlined className="text-blue-500" />
             Search <span className="text-blue-600">Electoral Roll</span>
           </h1>
-
+ 
           <p className="text-sm text-slate-500">
             Enter criteria to find registered voters
           </p>
         </div>
       </div>
-
+ 
       {/* Search Card */}
       <Card className="se-card shadow-lg border border-slate-200 mb-6">
-
+ 
         {/* Location */}
         <div className="flex items-center gap-3 mb-4">
           <span className="flex items-center gap-1.5 text-xs font-bold tracking-widest text-slate-400 uppercase whitespace-nowrap">
@@ -311,7 +311,7 @@ const SearchElectoral = () => {
           </span>
           <Divider className="!m-0 flex-1 !border-slate-100" />
         </div>
-
+ 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
           <FieldWrapper label="State" optional={false}>
             <Select
@@ -335,7 +335,7 @@ const SearchElectoral = () => {
               ))}
             </Select>
           </FieldWrapper>
-
+ 
           <FieldWrapper label="District" optional={false}>
             <Select
               className="se-select w-full"
@@ -354,7 +354,7 @@ const SearchElectoral = () => {
               ))}
             </Select>
           </FieldWrapper>
-
+ 
           <FieldWrapper label="Constituency" optional={false}>
             <Select
               className="se-select w-full"
@@ -374,13 +374,13 @@ const SearchElectoral = () => {
             </Select>
           </FieldWrapper>
         </div>
-
+ 
         {!isLocationSelected && (
           <p className="text-xs text-slate-400 mb-4">
             Please select State, District and Constituency first
           </p>
         )}
-
+ 
         {isLocationSelected && (
         <>
           {/* Voter Details */}
@@ -390,7 +390,7 @@ const SearchElectoral = () => {
             </span>
             <Divider className="!m-0 flex-1 !border-slate-100" />
           </div>
-
+ 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <FieldWrapper label="Voter Name">
               <Input
@@ -404,7 +404,7 @@ const SearchElectoral = () => {
                 allowClear
               />
             </FieldWrapper>
-
+ 
             <FieldWrapper label="Relative's Name">
               <Input
                 className="se-input"
@@ -420,7 +420,7 @@ const SearchElectoral = () => {
                 allowClear
               />
             </FieldWrapper>
-
+ 
             <FieldWrapper label="Age">
               <Input
                 className="se-input"
@@ -438,7 +438,7 @@ const SearchElectoral = () => {
                 allowClear
               />
             </FieldWrapper>
-
+ 
             <FieldWrapper label="Polling Station / School">
               <Select
                 className="se-select w-full"
@@ -468,7 +468,7 @@ const SearchElectoral = () => {
           </div>
         </>
       )}
-
+ 
         {/* Actions */}
         <div className="flex flex-wrap items-center justify-between gap-3 mt-6 pt-5 border-t border-slate-100">
           {isLocationSelected && (
@@ -476,7 +476,7 @@ const SearchElectoral = () => {
               💡 At least one field in voter detials is required to search
             </Text>
           )}
-
+ 
           <div className="flex items-center gap-3">
             <Button
               icon={<ClearOutlined />}
@@ -485,7 +485,7 @@ const SearchElectoral = () => {
             >
               Clear All
             </Button>
-
+ 
             <Button
               type="primary"
               icon={<SearchOutlined />}
@@ -493,7 +493,7 @@ const SearchElectoral = () => {
               disabled={!isSearchEnabled}
               onClick={() =>{
                 setUiPage(1);
-                navigate(/search/1, { replace: true });
+                navigate(`/search/1`, { replace: true });
                 handleSearch(1);
               }}
               className="!rounded-xl !h-10 !px-7 !font-semibold !border-none"
@@ -508,7 +508,7 @@ const SearchElectoral = () => {
           </div>
         </div>
       </Card>
-
+ 
       {/* Empty */}
       {searched && !loading && data.length === 0 && (
         <Card className="se-card shadow-sm border border-slate-200">
@@ -528,7 +528,7 @@ const SearchElectoral = () => {
           />
         </Card>
       )}
-
+ 
       {/* Results */}
       {!loading && data.length > 0 && (
         <Card
@@ -541,7 +541,7 @@ const SearchElectoral = () => {
                 Search Results
               </span>
             </div>
-
+ 
             <div className="flex items-center gap-3">
               <Tag
                 className="!rounded-full !px-3 !font-semibold !text-xs"
@@ -549,7 +549,7 @@ const SearchElectoral = () => {
               >
                 {total} voters found
               </Tag>
-
+ 
             </div>
           </div>
           }
@@ -565,16 +565,16 @@ const SearchElectoral = () => {
               current: uiPage,
               pageSize: pageSize,
               total: total,
-
+ 
               showSizeChanger: true,
               pageSizeOptions: ["25", "50", "75", "100"],
-
+ 
               onChange: (page, size) => {
                 setUiPage(page);
                 setPageSize(size);
-                goToPage(page, size); 
+                goToPage(page, size);
               },
-
+ 
               onShowSizeChange: (page, size) => {
                 setUiPage(1);
                 setPageSize(size);
@@ -591,5 +591,5 @@ const SearchElectoral = () => {
   </div>
 );
 };
-
+ 
 export default SearchElectoral;
