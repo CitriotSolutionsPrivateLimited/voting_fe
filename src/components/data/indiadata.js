@@ -97,9 +97,9 @@ export const INDIA_DATA = {
     ],
     "Mysore": [
       "Krishnaraja", "Chamundeshwari",
-      "Narasimharaja", "Chamaraja",
-      "Hunsur", "Heggadadevankote",
-      "Nanjangud", "T.Narasipur"
+      "Narasimharaja", "Chamaraja", "Krishnarajanagar",
+      "Hunsur", "Heggadadevankoti", "Periyapatna",
+      "Nanjangud", "T. Narasipur", "Bannur",
     ],
     "Raichur": [
       "Devadurga", "Lingsugur",
