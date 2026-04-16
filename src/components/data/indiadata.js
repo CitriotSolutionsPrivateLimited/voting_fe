@@ -27,7 +27,7 @@ export const INDIA_DATA = {
     ],
     "Bidar": [
       "Aurad", "Bhalki", "Basavakalyan",
-      "Humnabad", "Bidar South", "Bidar North"
+      "Humnabad", "Bidar", "Hulsoor"
     ],
     "Chamarajanagar": [
       "Kollegal", "Hanur", "Chamarajanagar", "Gundlupet"
