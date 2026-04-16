@@ -63,9 +63,16 @@ const SearchElectoral = () => {
         setStations([]);
         return;
       }
- 
+
+      // Clear old polling stations immediately
+      setStations([]);
+      setForm((prev) => ({
+        ...prev,
+        pollingStation: "",
+      }));
+
       setStationsLoading(true);
- 
+
       try {
         const res = await axios.get("polling-stations", {
           params: {
@@ -74,7 +81,7 @@ const SearchElectoral = () => {
             constituency: form.constituency,
           },
         });
- 
+
         setStations(res.data);
       } catch (err) {
         console.error(err);
@@ -82,14 +89,10 @@ const SearchElectoral = () => {
         setStationsLoading(false);
       }
     };
- 
+
     fetchStations();
   }, [form.state, form.district, form.constituency]);
  
- 
-  useEffect(() => {
-    setForm(prev => ({ ...prev, pollingStation: "" }));
-  }, [form.state, form.district, form.constituency]);
  
   const handleSearch = async (
       page = uiPage,
